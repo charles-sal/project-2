@@ -40,19 +40,22 @@ trackerApp.appendCountries = (countriesFromApi) => {
     let country = '';
     let countryCode = '';
     const selectElement = document.querySelector('select');
+    let option ;
+
      for (i=0; i < countriesFromApi.response.countries.length; i++) { 
-        // console.log(countriesFromApi.response.countries[i].country_name);
+        
         country = countriesFromApi.response.countries[i].country_name;
         countryCode = countriesFromApi.response.countries[i]['iso-3166'];
 
-        const option = document.createElement('option');
+        option = document.createElement('option');
         option.value = countryCode;
         option.textContent = country;
 
         selectElement.appendChild(option);
-
     };
-    
+
+    option = document.getElementsByClassName('placehOption');
+    option[0].disabled = true;
 }
 
 trackerApp.getHolidays = () => {
@@ -214,5 +217,6 @@ trackerApp.init = () => {
     trackerApp.getHolidays();
     // trackerApp.myFunction();
 }
+
 
 trackerApp.init();
