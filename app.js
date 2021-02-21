@@ -4,35 +4,147 @@
 const trackerApp = {};
 
 //save relevant API information
-trackerApp.apiUrl = "https://calendarific.com/api/v2/holidays";
+trackerApp.apiUrl = "https://calendarific.com/api/v2/";
 trackerApp.apiKey = "cfcdc8d5af30432ed42334fb974070b9949133aa";
 
 
 // trackerApp.time = 
-trackerApp.year = 2020;
+trackerApp.year = 2021;
+trackerApp.country = "US";
 
 
+//create a method (AKA function on the app object) which requests information from the API
+//logs it to the console
 
-trackerApp.country = "CA";
+trackerApp.getCountries = () => {
+    const url = new URL(trackerApp.apiUrl+`countries`);
+    url.search = new URLSearchParams({
+    api_key: trackerApp.apiKey,
+    })
 
-document.addEventListener("contextmenu", function(e) {
+    fetch(url)
+    .then((response) => {
+        console.log(response);
+        return response.json();
+    })
+
+    //parse the JSON Promise and log out readable data (AKA data JSON format)
+    .then((jsonResponse) => {
+        console.log(jsonResponse);
+        trackerApp.appendCountries(jsonResponse);
+    })
+}
+
+trackerApp.appendCountries = (countriesFromApi) => {
+    // i=0;
+    let country = '';
+    let countryCode = '';
+    const selectElement = document.querySelector('select');
+     for (i=0; i < countriesFromApi.response.countries.length; i++) { 
+        // console.log(countriesFromApi.response.countries[i].country_name);
+        country = countriesFromApi.response.countries[i].country_name;
+        countryCode = countriesFromApi.response.countries[i]['iso-3166'];
+
+        const option = document.createElement('option');
+        option.value = countryCode;
+        option.textContent = country;
+
+        selectElement.appendChild(option);
+
+    };
+    
+}
+
+trackerApp.getHolidays = () => {
+
+    //use the URL constructor to specify the parameters we wish to include in our API endpoint (AKA in the request we are making to the API)
+    const url = new URL(trackerApp.apiUrl+`holidays`);
+    url.search = new URLSearchParams({
+
+    api_key: trackerApp.apiKey,
+    country: trackerApp.country,
+    year: trackerApp.year,
+
+    })
+
+    //using the fetch API to make a request to the Unsplash API photos endpoint
+    fetch(url)
+    .then((response) => {
+        console.log(response);
+        //parse this response into JSON
+        //return JSON response so that it can be used in the next function
+        return response.json();
+    })
+
+    //parse the JSON Promise and log out readable data (AKA data JSON format)
+    .then((jsonResponse) => {
+        console.log(jsonResponse);
+
+        //pass the data into the displayPhotos method
+        //AKA call the displayPhotos within getPhotos
+        //trackerApp.filterHolidays(jsonResponse, start, end);
+    })
+}
+
+
+//create a method to display phots on the front end
+trackerApp.filterHolidays = (dataFromApi) => {
+
+    //query the document and find the first ul
+    // const ul = document.querySelector('ul');
+    trackerApp.calcDays();
+    const holidayData = [];
+    let j = 0;
+    let counter = 0;
+    for (i=0; i < dataFromApi.response.holidays.length; i++) {
+
+        if (dataFromApi.response.holidays[i].type[0] === "National holiday" && dataFromApi.response.holidays[i].locations === "All") {
+        
+            holidayData.push(dataFromApi.response.holidays[i].date.iso);
+            const holiDate = new Date(holidayData[j]);
+            const f = new Date('2021-6-2');
+
+            console.log(holiDate);
+            let holiDay = holiDate.getDay();
+            console.log(holiDay);
+            
+            j++;
+            
+            if (holiDay < 6 && holiDay > 0) {
+                counter++;
+            }
+
+            if (f > holiDate) {
+                console.log('hi');
+            }
+
+        }
+    }
+    console.log('Counter:', counter);
+    
+    console.log(holidayData);
+}
+
+
+trackerApp.calcDays = () =>  {
 
     // e.preventDefault();
+    let dateParam = [];
 
     // hours*minutes*seconds*milliseconds
     const oneDay = 24 * 60 * 60 * 1000; 
     
     // Get the user input from date selector and store the value in order to convert it into an array to pass it on to the Date() constructor
     let startDateInput = document.getElementById("start").value;
-    const startDateArray = startDateInput.split('-');
-    const startDate = new Date(startDateArray);
-    // console.log(startDateArray);
+    const startDate = new Date(startDateInput);
+    dateParam.push(startDate);
+    // console.log(startDate);
     
 
     let endDateInput = document.getElementById("end").value;
-    const endDateArray = endDateInput.split('-');
-    const endDate = new Date(endDateArray);
-    // console.log(endDateArray);
+    const endDate = new Date(endDateInput);
+    dateParam.push(endDate);
+    // console.log(endDate);
     
     // Get the duration by subtracting the Date() constructors between start and end date. Because the date constructor value is represnted by the number of millisceonds we need to divide by the number of milliseconds per day to get back the number of days. We then add 1 in order to count the first day.
     let totalDays = ((endDate - startDate) / oneDay) + 1;
@@ -91,88 +203,14 @@ document.addEventListener("contextmenu", function(e) {
     const workDays = (totalDays) - weekEndDays;
     // console.log("Number of Work Days:", workDays);
 
-}); 
-
-
-
-//create a method (AKA function on the app object) which requests information from the API
-//logs it to the console
-trackerApp.getHolidays = () => {
-
-    //use the URL constructor to specify the parameters we wish to include in our API endpoint (AKA in the request we are making to the API)
-    const url = new URL(trackerApp.apiUrl);
-    url.search = new URLSearchParams({
-
-    api_key: trackerApp.apiKey,
-    country: trackerApp.country,
-    year: trackerApp.year,
-
-})
-
-    //using the fetch API to make a request to the Unsplash API photos endpoint
-    fetch(url)
-    .then((response) => {
-        console.log(response);
-        //parse this response into JSON
-        //return JSON response so that it can be used in the next function
-        return response.json();
-    })
-
-    //parse the JSON Promise and log out readable data (AKA data JSON format)
-    .then((jsonResponse) => {
-        console.log(jsonResponse);
-
-        //pass the data into the displayPhotos method
-        //AKA call the displayPhotos within getPhotos
-        trackerApp.filterHolidays(jsonResponse);
-    })
-}
-
-
-//create a method to display phots on the front end
-trackerApp.filterHolidays = (dataFromApi) => {
-
-    //query the document and find the first ul
-    // const ul = document.querySelector('ul');
-    const holidayData = [];
-    for (i=0; i < dataFromApi.response.holidays.length; i++) {
-
-        if (dataFromApi.response.holidays[i].type[0] === "National holiday" && dataFromApi.response.holidays[i].locations === "All") {
-        
-            holidayData.push(dataFromApi.response.holidays[i]);
-
-        }
-    }
-    console.log(holidayData);
-    
-    //take the data from the API and interate through it
-    //for EACH object in API we will:
-    
-    // dataFromApi.forEach((datum) => {
-
-    //     //create list elements 
-    //     // const listElement = document.createElement('li');
-
-    //     // //create image elements
-    //     // const image = document.createElement('img');
-    //     //add content for img alt and src attributes
-    //     let i = datum.holidays;
-    //     console.log(i);
-        
-    //     // image.alt = datum.alt_description;
-
-    //     //append the image element to its parent li
-    //     // listElement.appendChild(image);
-
-    //     //append the li to the gallery ul
-    //     // ul.appendChild(listElement);
-    // })
-}
+};
 
 
 //create an initialization method
 trackerApp.init = () => {
     //calling the method which makes the request to the API
+    trackerApp.getCountries();
+
     trackerApp.getHolidays();
     // trackerApp.myFunction();
 }
