@@ -6,6 +6,11 @@ const trackerApp = {};
 //save relevant API information
 trackerApp.apiUrl = "https://calendarific.com/api/v2/";
 trackerApp.apiKey = "cfcdc8d5af30432ed42334fb974070b9949133aa";
+trackerApp.daysParam = [];
+
+trackerApp.startDate = new Date(document.getElementById("start").value);
+
+trackerApp.endDate = new Date(document.getElementById("end").value);
 
 
 // trackerApp.time = 
@@ -85,7 +90,7 @@ trackerApp.getHolidays = () => {
 
         //pass the data into the displayPhotos method
         //AKA call the displayPhotos within getPhotos
-        //trackerApp.filterHolidays(jsonResponse, start, end);
+        trackerApp.filterHolidays(jsonResponse);
     })
 }
 
@@ -93,37 +98,41 @@ trackerApp.getHolidays = () => {
 //create a method to display phots on the front end
 trackerApp.filterHolidays = (dataFromApi) => {
 
-    //query the document and find the first ul
+    // query the document and find the first ul
     // const ul = document.querySelector('ul');
     trackerApp.calcDays();
+    // console.log(trackerApp.daysParam);
+    
+
     const holidayData = [];
     let j = 0;
     let counter = 0;
+    let holidays = 0;
     for (i=0; i < dataFromApi.response.holidays.length; i++) {
 
         if (dataFromApi.response.holidays[i].type[0] === "National holiday" && dataFromApi.response.holidays[i].locations === "All") {
         
             holidayData.push(dataFromApi.response.holidays[i].date.iso);
             const holiDate = new Date(holidayData[j]);
-            const f = new Date('2021-6-2');
-
-            console.log(holiDate);
+            
             let holiDay = holiDate.getDay();
             console.log(holiDay);
-            
             j++;
             
-            if (holiDay < 6 && holiDay > 0) {
+            if (holiDay > 5 || holiDay < 1) {
                 counter++;
             }
 
-            if (f > holiDate) {
-                console.log('hi');
+            if (trackerApp.startDate < holiDate && trackerApp.endDate > holiDate) {
+                holidays++;
             }
+
 
         }
     }
-    console.log('Counter:', counter);
+    console.log('Holidays:', holidays);
+    
+    console.log('Holidays that fall on weekends:', counter);
     
     console.log(holidayData);
 }
@@ -131,22 +140,19 @@ trackerApp.filterHolidays = (dataFromApi) => {
 
 trackerApp.calcDays = () =>  {
 
-    // e.preventDefault();
-    let dateParam = [];
+   
 
     // hours*minutes*seconds*milliseconds
     const oneDay = 24 * 60 * 60 * 1000; 
     
     // Get the user input from date selector and store the value in order to convert it into an array to pass it on to the Date() constructor
-    let startDateInput = document.getElementById("start").value;
-    const startDate = new Date(startDateInput);
-    dateParam.push(startDate);
+    
+    const startDate = new Date(trackerApp.startDateInput);
     // console.log(startDate);
     
 
-    let endDateInput = document.getElementById("end").value;
-    const endDate = new Date(endDateInput);
-    dateParam.push(endDate);
+    
+    const endDate = new Date(trackerApp.endDateInput);
     // console.log(endDate);
     
     // Get the duration by subtracting the Date() constructors between start and end date. Because the date constructor value is represnted by the number of millisceonds we need to divide by the number of milliseconds per day to get back the number of days. We then add 1 in order to count the first day.
@@ -205,8 +211,11 @@ trackerApp.calcDays = () =>  {
     // console.log("Number of Weekend Days: ", weekEndDays);
     const workDays = (totalDays) - weekEndDays;
     // console.log("Number of Work Days:", workDays);
-
-};
+    trackerApp.daysParam.push(workDays, weekEndDays);
+    // days.push(weekEndDays);
+    
+    
+}
 
 
 //create an initialization method
