@@ -1,1 +1,182 @@
+/*  Define Setup Snippet */
+
+html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,footer,header,nav,section{display:block}h1{font-size:2em;margin:.67em 0}figcaption,figure,main{display:block}figure{margin:1em 40px}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent;-webkit-text-decoration-skip:objects}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:inherit}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}dfn{font-style:italic}mark{background-color:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}audio,video{display:inline-block}audio:not([controls]){display:none;height:0}img{border-style:none}svg:not(:root){overflow:hidden}button,input,optgroup,select,textarea{font-family:sans-serif;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}button,html [type=button],[type=reset],[type=submit]{-webkit-appearance:button}button::-moz-focus-inner,[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner{border-style:none;padding:0}button:-moz-focusring,[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{display:inline-block;vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details,menu{display:block}summary{display:list-item}canvas{display:inline-block}template{display:none}[hidden]{display:none}
+
+.clearfix:after {visibility: hidden; display: block; font-size: 0; content: ''; clear: both; height: 0; }
+
+html { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
+
+*, *:before, *:after {box-sizing: inherit}
+
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; border: 0; padding: 0; white-space: nowrap; clip-path: inset(100%); clip: rect(0 0 0 0); overflow: hidden;}
+
+/*  Define CSS variables for theme colours */
+:root{
+    --bronze: #69583d;
+    --violet: #7d5962;
+    --teal: #5c9185;
+    --green: #7bb497;
+    --beige: #fef8ea;
+}
+
+/* Body Properties */
+body{
+    margin: 0;
+    padding: 0;
+    font-size: 62.5%;
+    /* font-family: Arial, Helvetica, sans-serif; */
+    /* background: var(--violet); */
+    /* font-family: 'Poiret One', cursive; */
+}
+
+body *{
+    font-family: 'Poiret One', arial;
+}
+
+/* Wrapper Properties */
+.wrapper{
+    margin: 0 auto;
+    width: 90%;
+    max-width: 1280px;
+}
+
+/* Properties for main window */
+.mainWindow{
+    /* border: 20px solid var(--brown); */
+    /* background: var(--green); */
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+
+    height: 100vh;
+}
+
+.mainWindow>*{
+    /* border: 7px solid var(--green); */
+    border-radius: 15px;
+}
+
+.resultsContainer, .sidePane{
+    background: var(--beige);
+    /* margin-right: 15px; */
+}
+
+h1{
+    margin: 20px 0;
+    padding: 20px 30px;
+    color: var(--violet);
+    font-size: 2rem;
+    letter-spacing: 0.8rem;
+    width: 100%;
+    background: var(--beige);
+}
+
+.featuredContent *{
+    border-radius: 15px;
+}
+
+/* Formatting for featureContent container (to house all output results inside) */
+.featuredContent{
+    /* margin-right: 15px; */
+    /* background: var(--beige); */
+    flex: 0 1 70%;
+    display: flex;
+    flex-direction: column;
+    margin-right: 30px;
+}
+
+.resultsContainer{
+    /* margin-top: 15px; */
+    height: 500px;
+}
+
+/* Formatting for sidePane (to house all user inputs) */
+.sidePane{
+    /* margin-left: 15px; */
+    /* background: var(--beige); */
+    flex: 0 1 30%;
+    padding: 15px 0;
+    /* width: 30%; */
+  
+}
+
+/* Formatting for form */
+form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;    
+}
+
+form *{
+    border: none;
+}
+
+
+.dateSelector{
+    flex: 0 1 100%;
+    padding: 20px 0;
+    /* border: 1px solid red; */
+}
+
+/* Start and End date label formatting */
+label[for=start], label[for=end]{
+    color: var(--violet);
+    font-size: 1.3rem;
+    letter-spacing: 0.3rem
+}
+
+/* Formatting for date input fields and select field*/
+input[type=date], select{
+    /* border: none;  */
+    color: var(--violet);
+    font-size: 1.1rem;
+    outline: none;
+    padding: 2px 15px;
+    line-height: 1.4rem;
+    border-radius: 5px;
+}
+
+/* select{
+    padding: 0 15px;
+} */
+
+/* Formatting for input date fields */
+input[type=date]{
+    border-bottom: 1px solid var(--green);
+}
+
+/* option[value=us]{
+     font-size: 1rem;
+} */
+
+/* Formatting for submit and reset buttons */
+button{
+    letter-spacing: 0.5rem;
+    /* border: none; */
+    border-radius: 5px;
+    color: var(--beige);
+    font-size: 1.1rem;
+    padding: 12px 0px;
+    width: 55%;
+    margin-top: 15px;
+}
+
+button[type=submit]{
+    background: var(--violet);
+}
+
+button[type=reset]{
+    background: var(--bronze);
+}
+
+
+
+
+
+
+
+
 

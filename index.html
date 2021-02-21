@@ -1,26 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Project Tracker</title>
-    <link rel="stylesheet" href="styles.css">
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Project Tracker</title>
+  <link rel="stylesheet" href="styles.css">
 
-  <body>
+  <!-- Import Google Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poiret+One&display=swap" rel="stylesheet">
 
-    <h1>Project Tracker</h1>
+</head>
 
-    <label for="start">Start Date:</label>
-    <input type="date" id="start" name="start"> 
+<body>
 
-    <label for="end">End Date:</label>
-    <input type="date" id="end" name="end"> 
 
-    <script src="app.js"></script>
-  
-  </body>
+  <div class="wrapper mainWindow">
+
+    <section class="featuredContent">
+      <h1>Project Tracker</h1>
+
+      <div class="resultsContainer">
+      </div>
+
+    </section>
+
+    <section class="sidePane">
+      <form action="">
+        <div class="dateSelector">
+          <label for="start">Start Date:</label>
+          <input type="date" id="start" name="start">
+        </div>
+        <div class="dateSelector">
+          <label for="end">End Date:</label>
+          <input type="date" id="end" name="end">
+        </div>
+        <select name="countries" id="countries">
+          <option value="us">USA</option>
+
+
+        </select>
+        <button type="reset">RESET</button>
+        <button type="submit">SUBMIT</button>
+
+
+      </form>
+
+    </section>
+
+  </div>
+
+
+
+  <script src="app.js"></script>
+
+</body>
 
 </html>
