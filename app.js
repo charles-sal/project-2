@@ -8,7 +8,7 @@ trackerApp.apiUrl = "https://calendarific.com/api/v2/holidays";
 trackerApp.apiKey = "cfcdc8d5af30432ed42334fb974070b9949133aa";
 
 
-trackerApp.time = 
+// trackerApp.time = 
 trackerApp.year = 2020;
 
 
@@ -17,31 +17,39 @@ trackerApp.country = "CA";
 
 document.addEventListener("contextmenu", function(e) {
 
-    e.preventDefault();
+    // e.preventDefault();
 
-    const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-
-    let x = document.getElementById("birthday").value;
-    console.log(x);
-    const dateX = x.split('-');
-
-    let y = document.getElementById("birthday-1").value;
-    console.log(y);
-    const dateY = y.split('-');
-
-    const firstDate = new Date(dateX);
-    console.log(firstDate);
+    // hours*minutes*seconds*milliseconds
+    const oneDay = 24 * 60 * 60 * 1000; 
     
-    const secondDate = new Date(dateY);
-    console.log(secondDate);
+    // Get the user input from date selector and store the value in order to convert it into an array to pass it on to the Date() constructor
+    let startDateInput = document.getElementById("start").value;
+    const startDateArray = startDateInput.split('-');
+    const startDate = new Date(startDateArray);
+    // console.log(startDateArray);
+    
 
-    let diffDays = ((secondDate - firstDate) / oneDay) + 1;
-    console.log(diffDays);
+    let endDateInput = document.getElementById("end").value;
+    const endDateArray = endDateInput.split('-');
+    const endDate = new Date(endDateArray);
+    // console.log(endDateArray);
+    
+    // Get the duration by subtracting the Date() constructors between start and end date. Because the date constructor value is represnted by the number of millisceonds we need to divide by the number of milliseconds per day to get back the number of days. We then add 1 in order to count the first day.
+    let totalDays = ((endDate - startDate) / oneDay) + 1;
+    // console.log('Total Days:', totalDays);
+    
+    
+    // We use startDay and endDay to know the day of the week that we are on in order to pass this information to our algorithm for calculating the number of actual weekend days accurately.
+    let startDay = startDate.getDay();
+    // console.log('Start Day:', startDay);
+    
+    let endDay = endDate.getDay();
+    
 
-    let startDay = firstDate.getDay();
-    let endDay = secondDate.getDay();
+    // Tracks the number of surplus days over and above a series of complete weeks or if it is less than a week then it tracks the number of days before it completes a week.
+    let extraDays = 0;
 
-
+    // Modify the startDay and endDay date values so that sunday will correspond to Day 7. This way Monday (start of the week) will correspond to Day 1 and Sunday (end of the week) will correspond to Day 7.
     if (startDay === 0) {
         startDay += 7;
     } 
@@ -50,28 +58,38 @@ document.addEventListener("contextmenu", function(e) {
         endDay += 7;
     }
 
-    if (diffDays >= 7) {
-    let extraDays = diffDays % 7;
-    // Output from above: 1 to 6
+    // console.log('End Day:', endDay);
+
+
+    // If the totalDays is more than a week then it will divide the number of weeks by 7 and give us the remainder of the number of surplus days over and above a series of complete weeks. Else if the number of totalDays is less than a week then it calculates the number of days before it completes a full week.
+    if (totalDays >= 7) {
+        extraDays = totalDays % 7;
+        // console.log('Extra Days:', extraDays);
+        
     }
     else {
-    let extraDays = 6 - diffDays;
-    }
-    console.log("Extra Days: ", extraDays);
-
-    let weekEnd = Math.trunc(diffDays / 7) * 2;
-
-    if (extraDays === Math.abs(6 - startDay)) {
-        weekEnd++;
+        extraDays = 6 - totalDays;
+        // console.log('Extra Days:', extraDays);
     }
 
-    else if (extraDays === (7 - startDay)) {
-        weekEnd += 2;
+    // Calculates the number of weekEndDays in the project timeline (for every week we pass it should be multiplied by 2 cause we have Saturday and Sunday)
+    let weekEndDays = Math.trunc(totalDays / 7) * 2;
+    // console.log('Weekend before adding extra days:', weekEndDays);
+    
+
+    // Checks if startDay or endDay falls on a Saturday to add an extra weekend day
+    if (extraDays === Math.abs(6 - startDay) || endDay === 6) {
+        weekEndDays++;
+    }
+
+    // Checks if startDay or endDay falls on a Sunday to add an extra weekend day
+    else if (extraDays === (7 - startDay) || endDay === 7) {
+        weekEndDays += 2;
     }
     
-    console.log("Number of Weekend Days: ", weekEnd);
-    const weekDays = (diffDays) - weekEnd;
-    console.log("Number of Work Days:", weekDays);
+    // console.log("Number of Weekend Days: ", weekEndDays);
+    const workDays = (totalDays) - weekEndDays;
+    // console.log("Number of Work Days:", workDays);
 
 }); 
 
@@ -129,6 +147,7 @@ trackerApp.filterHolidays = (dataFromApi) => {
     
     //take the data from the API and interate through it
     //for EACH object in API we will:
+    
     // dataFromApi.forEach((datum) => {
 
     //     //create list elements 
