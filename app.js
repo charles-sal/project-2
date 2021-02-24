@@ -16,6 +16,10 @@ trackerApp.year = trackerApp.startDate.getFullYear();
 
 // trackerApp.countries = document.querySelector('select').querySelectorAll('option').value;
 
+// add selectedCountries property in global scope
+trackerApp.selectedCountries = [];
+
+
 // trackerApp.final = trackerApp.countries.elements['countries'];
 
 // trackerApp.final2 = trackerApp.final.value;
@@ -29,20 +33,21 @@ trackerApp.year = trackerApp.startDate.getFullYear();
 
 
 trackerApp.getCountries = () => {
-    const url = new URL(trackerApp.apiUrl+`countries`);
+    const url = new URL(trackerApp.apiUrl + `countries`);
     url.search = new URLSearchParams({
-    api_key: trackerApp.apiKey,
+        api_key: trackerApp.apiKey,
     })
 
     fetch(url)
-    .then((response) => {
-        return response.json();
-    })
+        .then((response) => {
+            return response.json();
+        })
 
-    //parse the JSON Promise and log out readable data (AKA data JSON format)
-    .then((jsonResponse) => {
-        trackerApp.appendCountries(jsonResponse);
-    })
+        //parse the JSON Promise and log out readable data (AKA data JSON format)
+        .then((jsonResponse) => {
+            trackerApp.appendCountries(jsonResponse);
+
+        })
 }
 
 trackerApp.appendCountries = (countriesFromApi) => {
@@ -50,10 +55,10 @@ trackerApp.appendCountries = (countriesFromApi) => {
     let country = '';
     let countryCode = '';
     const selectElement = document.querySelector('select');
-    let option ;
+    let option;
 
-     for (i=0; i < countriesFromApi.response.countries.length; i++) { 
-        
+    for (i = 0; i < countriesFromApi.response.countries.length; i++) {
+
         country = countriesFromApi.response.countries[i].country_name;
         countryCode = countriesFromApi.response.countries[i]['iso-3166'];
 
@@ -73,53 +78,68 @@ trackerApp.getHolidays = () => {
 
     //use the URL constructor to specify the parameters we wish to include in our API endpoint (AKA in the request we are making to the API)
 
-    document.querySelector('#countries').addEventListener('change', (e) => {
 
-        
-        document.querySelector('form').addEventListener('submit', (event) => {
+
+    document.querySelector('form').addEventListener('submit', (event) => {
 
         event.preventDefault();
-        console.log(e.target.value);
-        // console.log(trackerApp.countries);
+
+        //Reset selected countries to empty array
+        trackerApp.selectedCountries = [];
+
+        const eachCountry = document.querySelector('select').selectedOptions;
+
+        // Push all selected country codes into trackerApp.countries array
+        for (let index = 0; index < eachCountry.length; index++) {
+            trackerApp.selectedCountries.push(eachCountry[index].value);
+        }
+
+        console.log(trackerApp.selectedCountries);
+
+
+
+        // console.log(event.target.value);
+        console.log(trackerApp);
         // console.log(trackerApp.final);
         // console.log(trackerApp.final2);
 
 
+        // CW: Need to pass in all selected countries from trackerApp.countries array into the URL.searh.country and call the API the same number of times as the number of countries selected.
 
-        const url = new URL(trackerApp.apiUrl+`holidays`);
+        const url = new URL(trackerApp.apiUrl + `holidays`);
         url.search = new URLSearchParams({
 
-        api_key: trackerApp.apiKey,
-        country: e.target.value,
-        year: trackerApp.year,
+            api_key: trackerApp.apiKey,
+            country: trackerApp.selectedCountries[0],
+            year: trackerApp.year,
 
         })
 
         //using the fetch API to make a request to the Unsplash API photos endpoint
         fetch(url)
-        .then((response) => {
-            console.log(response);
-            //parse this response into JSON
-            //return JSON response so that it can be used in the next function
-            return response.json();
-        })
+            .then((response) => {
+                console.log(response);
+                //parse this response into JSON
+                //return JSON response so that it can be used in the next function
+                return response.json();
+            })
 
-        //parse the JSON Promise and log out readable data (AKA data JSON format)
-        .then((jsonResponse) => {
-            console.log(jsonResponse);
+            //parse the JSON Promise and log out readable data (AKA data JSON format)
+            .then((jsonResponse) => {
+                console.log(jsonResponse);
 
-            //pass the data into the displayPhotos method
-            //AKA call the displayPhotos within getPhotos
-            trackerApp.filterHolidays(jsonResponse);        
-        })
+                //pass the data into the displayPhotos method
+                //AKA call the displayPhotos within getPhotos
+                trackerApp.filterHolidays(jsonResponse);
+            })
 
-        document.querySelector('#countries').removeEventListener('change', () => {});
+        // document.querySelector('#countries').removeEventListener('change', () => { });
     })
 
-    document.querySelector('form').removeEventListener('submit', () => {
-    })
-})
+    //     document.querySelector('form').removeEventListener('submit', () => {
+    // })
 }
+
 
 
 trackerApp.filterHolidays = (dataFromApi) => {
@@ -129,7 +149,7 @@ trackerApp.filterHolidays = (dataFromApi) => {
     trackerApp.calcDays();
     // console.log(trackerApp.daysParam);
 
-    
+
 
     const holidayData = [];
     let j = 0;
@@ -140,17 +160,17 @@ trackerApp.filterHolidays = (dataFromApi) => {
 
     console.log(dataFromApi.response.holidays);
 
-    for (i=0; i < dataFromApi.response.holidays.length; i++) {
+    for (i = 0; i < dataFromApi.response.holidays.length; i++) {
 
         if (dataFromApi.response.holidays[i].type[0] === "National holiday" && dataFromApi.response.holidays[i].locations === "All") {
-        
+
             holidayData.push(dataFromApi.response.holidays[i].date.iso);
             const holiDate = new Date(holidayData[j]);
-            
+
             let holiDay = holiDate.getDay();
             j++;
-            
-            
+
+
 
             if (trackerApp.startDate <= holiDate && trackerApp.endDate >= holiDate) {
 
@@ -163,48 +183,48 @@ trackerApp.filterHolidays = (dataFromApi) => {
         }
     }
     // console.log(trackerApp.daysParam);
-    
+
     filteredWorkingDays = trackerApp.daysParam[0] - holidays;
 
     console.log('Number of workdays between given dates:', filteredWorkingDays);
-    
+
     console.log('Number of holidays between given dates:', holidays);
-    
+
     console.log('Holidays that fall on weekends:', counter);
 
     console.log('Number of weekends between given dates:', trackerApp.daysParam[1]);
-    
-    
+
+
     console.log(holidayData);
 }
 
 
-trackerApp.calcDays = () =>  {
+trackerApp.calcDays = () => {
 
     // hours*minutes*seconds*milliseconds
-    const oneDay = 24 * 60 * 60 * 1000; 
-    
+    const oneDay = 24 * 60 * 60 * 1000;
+
     // Get the user input from date selector and store the value in order to convert it into an array to pass it on to the Date() constructor
-    
+
     // const startDate = new Date(trackerApp.startDateInput);
     // console.log(startDate);
-    
 
-    
+
+
     // const endDate = new Date(trackerApp.endDateInput);
     // console.log(endDate);
-    
+
     // Get the duration by subtracting the Date() constructors between start and end date. Because the date constructor value is represnted by the number of millisceonds we need to divide by the number of milliseconds per day to get back the number of days. We then add 1 in order to count the first day.
     let totalDays = ((trackerApp.endDate - trackerApp.startDate) / oneDay) + 1;
     // console.log('Total Days:', totalDays);
-    
-    
+
+
     // We use startDay and endDay to know the day of the week that we are on in order to pass this information to our algorithm for calculating the number of actual weekend days accurately.
     let startDay = trackerApp.startDate.getDay();
     // console.log('Start Day:', startDay);
-    
+
     let endDay = trackerApp.endDate.getDay();
-    
+
 
     // Tracks the number of surplus days over and above a series of complete weeks or if it is less than a week then it tracks the number of days before it completes a week.
     let extraDays = 0;
@@ -212,7 +232,7 @@ trackerApp.calcDays = () =>  {
     // Modify the startDay and endDay date values so that sunday will correspond to Day 7. This way Monday (start of the week) will correspond to Day 1 and Sunday (end of the week) will correspond to Day 7.
     if (startDay === 0) {
         startDay += 7;
-    } 
+    }
 
     if (endDay === 0) {
         endDay += 7;
@@ -225,22 +245,22 @@ trackerApp.calcDays = () =>  {
     if (totalDays >= 7) {
         extraDays = totalDays % 7;
         // console.log('Extra Days:', extraDays);
-        
+
     }
     else {
         extraDays = 6 - totalDays;
         // console.log('Extra Days:', extraDays);
     }
     console.log('ExtraDays:', extraDays);
-    
+
     // Calculates the number of weekEndDays in the project timeline (for every week we pass it should be multiplied by 2 cause we have Saturday and Sunday)
     let weekEndDays = Math.trunc(totalDays / 7) * 2;
     // console.log('Weekend before adding extra days:', weekEndDays);
-    
+
 
     // Checks if startDay or endDay falls on a Saturday to add an extra weekend day
     if (extraDays > 0) {
-        
+
         if ((startDay <= 6 && endDay === 6) || startDay === 7) {
             weekEndDays++;
         }
@@ -253,12 +273,12 @@ trackerApp.calcDays = () =>  {
 
     console.log('Start Day:', startDay);
     console.log('End Day:', endDay);
-    
+
     // console.log("Number of Weekend Days: ", weekEndDays);
     const workDays = (totalDays) - weekEndDays;
     // console.log("Number of Work Days:", workDays);
     trackerApp.daysParam.push(workDays, weekEndDays);
-    
+
     // days.push(weekEndDays);
 }
 
