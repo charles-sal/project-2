@@ -1,5 +1,4 @@
 
-
 //create app object
 const trackerApp = {};
 
@@ -13,14 +12,21 @@ trackerApp.startDate = new Date(document.getElementById("start").value);
 
 trackerApp.endDate = new Date(document.getElementById("end").value);
 
+trackerApp.year = trackerApp.startDate.getFullYear();
 
-// trackerApp.time = 
-trackerApp.year = 2021;
-trackerApp.country = "UK";
+// trackerApp.countries = document.querySelector('select').querySelectorAll('option').value;
+
+// trackerApp.final = trackerApp.countries.elements['countries'];
+
+// trackerApp.final2 = trackerApp.final.value;
 
 
-//create a method (AKA function on the app object) which requests information from the API
-//logs it to the console
+
+
+
+
+// trackerApp.country = 'US';
+
 
 trackerApp.getCountries = () => {
     const url = new URL(trackerApp.apiUrl+`countries`);
@@ -30,13 +36,11 @@ trackerApp.getCountries = () => {
 
     fetch(url)
     .then((response) => {
-        console.log(response);
         return response.json();
     })
 
     //parse the JSON Promise and log out readable data (AKA data JSON format)
     .then((jsonResponse) => {
-        console.log(jsonResponse);
         trackerApp.appendCountries(jsonResponse);
     })
 }
@@ -68,42 +72,63 @@ trackerApp.appendCountries = (countriesFromApi) => {
 trackerApp.getHolidays = () => {
 
     //use the URL constructor to specify the parameters we wish to include in our API endpoint (AKA in the request we are making to the API)
-    const url = new URL(trackerApp.apiUrl+`holidays`);
-    url.search = new URLSearchParams({
 
-    api_key: trackerApp.apiKey,
-    country: trackerApp.country,
-    year: trackerApp.year,
+    document.querySelector('#countries').addEventListener('change', (e) => {
 
+        
+        document.querySelector('form').addEventListener('submit', (event) => {
+
+        event.preventDefault();
+        console.log(e.target.value);
+        // console.log(trackerApp.countries);
+        // console.log(trackerApp.final);
+        // console.log(trackerApp.final2);
+
+
+
+        const url = new URL(trackerApp.apiUrl+`holidays`);
+        url.search = new URLSearchParams({
+
+        api_key: trackerApp.apiKey,
+        country: e.target.value,
+        year: trackerApp.year,
+
+        })
+
+        //using the fetch API to make a request to the Unsplash API photos endpoint
+        fetch(url)
+        .then((response) => {
+            console.log(response);
+            //parse this response into JSON
+            //return JSON response so that it can be used in the next function
+            return response.json();
+        })
+
+        //parse the JSON Promise and log out readable data (AKA data JSON format)
+        .then((jsonResponse) => {
+            console.log(jsonResponse);
+
+            //pass the data into the displayPhotos method
+            //AKA call the displayPhotos within getPhotos
+            trackerApp.filterHolidays(jsonResponse);        
+        })
+
+        document.querySelector('#countries').removeEventListener('change', () => {});
     })
 
-    //using the fetch API to make a request to the Unsplash API photos endpoint
-    fetch(url)
-    .then((response) => {
-        console.log(response);
-        //parse this response into JSON
-        //return JSON response so that it can be used in the next function
-        return response.json();
+    document.querySelector('form').removeEventListener('submit', () => {
     })
-
-    //parse the JSON Promise and log out readable data (AKA data JSON format)
-    .then((jsonResponse) => {
-        console.log(jsonResponse);
-
-        //pass the data into the displayPhotos method
-        //AKA call the displayPhotos within getPhotos
-        trackerApp.filterHolidays(jsonResponse);
-    })
+})
 }
 
 
-//create a method to display phots on the front end
 trackerApp.filterHolidays = (dataFromApi) => {
 
     // query the document and find the first ul
     // const ul = document.querySelector('ul');
     trackerApp.calcDays();
     // console.log(trackerApp.daysParam);
+
     
 
     const holidayData = [];
@@ -113,7 +138,7 @@ trackerApp.filterHolidays = (dataFromApi) => {
     let filteredWorkingDays = 0;
     const sharedHolidays = 0;
 
-    // console.log(dataFromApi.response.holidays);
+    console.log(dataFromApi.response.holidays);
 
     for (i=0; i < dataFromApi.response.holidays.length; i++) {
 
@@ -240,11 +265,10 @@ trackerApp.calcDays = () =>  {
 
 //create an initialization method
 trackerApp.init = () => {
-    //calling the method which makes the request to the API
+
     trackerApp.getCountries();
 
     trackerApp.getHolidays();
-    // trackerApp.myFunction();
 }
 
 
