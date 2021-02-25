@@ -28,7 +28,8 @@ trackerApp.holidaysByCountry = [];
 // add empty array to track all holidays from all selected countries (1-D array)
 trackerApp.allHolidays = [];
 
-
+// add empty array  to keep the number of shared holidays between all selected countries
+trackerApp.sharedHolidays = [];
 
 
 
@@ -76,6 +77,10 @@ trackerApp.appendCountries = (countriesFromApi) => {
     option[0].disabled = true;
 }
 
+// Placeholder function to display trackerApp data onto screen
+trackerApp.displayData = () => {
+
+}
 
 trackerApp.getHolidays = () => {
 
@@ -96,11 +101,14 @@ trackerApp.getHolidays = () => {
         // Reset all holidays to empty array
         trackerApp.allHolidays = [];
 
-        const eachCountry = document.querySelector('select').selectedOptions;
+        // Reset array of holidays shared by all selected countries to 0
+        trackerApp.sharedHolidays = [];
+
+        const allUserCountrySelections = document.querySelector('select').selectedOptions;
 
         // Push all selected country codes into trackerApp.countries array
-        for (let index = 0; index < eachCountry.length; index++) {
-            trackerApp.selectedCountries.push(eachCountry[index].value);
+        for (let index = 0; index < allUserCountrySelections.length; index++) {
+            trackerApp.selectedCountries.push(allUserCountrySelections[index].value);
 
             console.log(trackerApp.selectedCountries);
 
@@ -134,7 +142,15 @@ trackerApp.getHolidays = () => {
                     console.log("TrackerApp Holidays by Country:", trackerApp.holidaysByCountry);
 
                     // Perform comparison of shared holidays between countries
-                    trackerApp.compareSharedHolidays();
+                    // trackerApp.compareSharedHolidays();
+
+                    console.log("all holidays: ", trackerApp.allHolidays);
+
+                    // Run this function only if we have cycled through to the last selected country on the list of selected countries
+                    if (index === allUserCountrySelections.length - 1) {
+                        trackerApp.filterSharedHolidays();
+                        console.log("successfully ran filterSharedHolidays()- Should run once only");
+                    }
 
                 })
         }
@@ -145,78 +161,114 @@ trackerApp.getHolidays = () => {
     })
 }
 
-// function to compare shared holidays between selected countries
-trackerApp.compareSharedHolidays = () => {
-    // trackerApp.selectedCountries
-    // trackerApp.holidaysByCountry
+// Function to generate an array of shared holidays that exist between all selected countries only
+trackerApp.filterSharedHolidays = () => {
 
-    // Define shared holidays array
-    let sharedHolidays = [];
+    // Step 1: Loop through the array of trackerApp.allholidays (which includes duplicate dates from all selected countries).  Compare the holiday date stored in the current index of the trackerApp.allHolidays array to all holiday dates from this array belonging to the current index position and higher.
+    // Step 2: If a holiday occurs the same number of times as the number of countries the user had selected, store this holiday date into a new sharedHolidays array and reset the counter back to 0.  
+    // Step 3: Repeat steps 1 and 2 for every index position in the trackerApp.allHolidays array.
 
-    for (let j = 0; j < trackerApp.allHolidays.length; j++) {
+    // Clear all trackerApp shared holidays
+    trackerApp.sharedHolidays = [];
 
-        for (let i = 0; i < trackerApp.allHolidays.length; i++) {
-            if (i === j) {
-                // Do nothing
-            }
-            else if (trackerApp.allHolidays[j].getTime() === trackerApp.allHolidays[i].getTime()) {
-                sharedHolidays.push(trackerApp.allHolidays[j]);
-            }
-        }
-    }
-
-    for (let j = 0; j < sharedHolidays.length; j++) {
-
-        for (let i = 0; i < sharedHolidays.length; i++) {
-            if (i === j) {
-                // Do nothing
-            }
-            else if (sharedHolidays[j].getTime() === sharedHolidays[i].getTime()) {
-                // sharedHolidays.pop(trackerApp.allHolidays[j]);
-                sharedHolidays.pop();
+    for (let i = 0; i < trackerApp.allHolidays.length; i++) {
+        let counter = 0;
+        for (let j = i; j < trackerApp.allHolidays.length; j++) {
+            if (trackerApp.allHolidays[j].getTime() === trackerApp.allHolidays[i].getTime()) {
+                // console.log("i counted 1");
+                counter++;
+                if (counter === trackerApp.selectedCountries.length) {
+                    trackerApp.sharedHolidays.push(trackerApp.allHolidays[i]);
+                    // console.log("storing date");
+                }
             }
         }
 
     }
-
-    // var arr = ["apple", "bannana", "orange", "apple", "orange"];
-
-    // sharedHolidays = sharedHolidays.filter(function (item, index, inputArray) {
-    //     return inputArray.indexOf(item) == index;
-    // });
-
-
-    console.log("trackerApp allholidays: ", trackerApp.allHolidays);
-    console.log("Shared Holidays", sharedHolidays);
-
-    let newHolidays = sharedHolidays.slice(0, (sharedHolidays.length / trackerApp.selectedCountries.length) - 1);
-
-
-
-
-
-    // // For loop to cycle through each country within the selected countries array
-    // for (let currCountryInd = 0; currCountryInd < trackerApp.selectedCountries.length; currCountryInd++) {
-
-    //     // For loop to cycle through all dates for the currently selected county in the selected countries array
-    //     for (let currDateInd = 0; currDateInd < trackerApp.holidaysByCountry[currCountryInd][currDateInd].length; currDateInd++) {
-
-    //         // For loop to compare the current holiday for the selected country with each holiday in the next selected country on the list 
-    //         for (let currDateToCompare = 0; currDateToCompare < trackerApp.holidaysByCountry[currCountryInd + 1][currDateToCompare].length; currDateToCompare++) {
-
-    //             if (trackerApp.holidaysByCountry[currCountryInd][currDateInd] === trackerApp.holidaysByCountry[currCountryInd + 1][currDateToCompare]) {
-    //                 sharedHolidays.push(trackerApp.holidaysByCountry[currCountryInd][currDateInd]);
-    //             }
-    //             // trackerApp.holidaysByCountry[currDateInd];
-    //         }
-    //     }
-    // }
-
-    console.log("Shared Holidays Array: ", newHolidays);
-
-
+    console.log('All shared holidays: ', trackerApp.sharedHolidays);
 
 }
+
+// function to compare shared holidays between selected countries
+// trackerApp.compareSharedHolidays = () => {
+//     // trackerApp.selectedCountries
+//     // trackerApp.holidaysByCountry
+
+//     // Define shared holidays array
+//     let sharedHolidays = [];
+
+//     for (let j = 0; j < trackerApp.allHolidays.length; j++) {
+
+//         for (let i = 0; i < trackerApp.allHolidays.length; i++) {
+//             if (i === j) {
+//                 // Do nothing
+//             }
+//             else if (trackerApp.allHolidays[j].getTime() === trackerApp.allHolidays[i].getTime()) {
+//                 sharedHolidays.push(trackerApp.allHolidays[j]);
+//             }
+//         }
+//     }
+
+//     for (let j = 0; j < sharedHolidays.length; j++) {
+
+//         for (let i = 0; i < sharedHolidays.length; i++) {
+//             if (i === j) {
+//                 // Do nothing
+//             }
+//             else if (sharedHolidays[j].getTime() === sharedHolidays[i].getTime()) {
+//                 // sharedHolidays.pop(trackerApp.allHolidays[j]);
+//                 sharedHolidays.pop();
+//             }
+//         }
+
+//     }
+
+
+//     //     result = array.filter(function(a, i, aa){
+//     //     (aa.indexOf(a) === i && aa.lastIndexOf(a) !== i);
+//     //     });    
+
+//     // console.log(result);
+
+
+//     // var arr = ["apple", "bannana", "orange", "apple", "orange"];
+
+//     // sharedHolidays = sharedHolidays.filter(function (item, index, inputArray) {
+//     //     return inputArray.indexOf(item) == index;
+//     // });
+
+
+//     console.log("trackerApp allholidays: ", trackerApp.allHolidays);
+//     console.log("Shared Holidays", sharedHolidays);
+
+//     let newHolidays = sharedHolidays.slice(0, (sharedHolidays.length / trackerApp.selectedCountries.length) - 1);
+
+
+
+
+
+//     // // For loop to cycle through each country within the selected countries array
+//     // for (let currCountryInd = 0; currCountryInd < trackerApp.selectedCountries.length; currCountryInd++) {
+
+//     //     // For loop to cycle through all dates for the currently selected county in the selected countries array
+//     //     for (let currDateInd = 0; currDateInd < trackerApp.holidaysByCountry[currCountryInd][currDateInd].length; currDateInd++) {
+
+//     //         // For loop to compare the current holiday for the selected country with each holiday in the next selected country on the list 
+//     //         for (let currDateToCompare = 0; currDateToCompare < trackerApp.holidaysByCountry[currCountryInd + 1][currDateToCompare].length; currDateToCompare++) {
+
+//     //             if (trackerApp.holidaysByCountry[currCountryInd][currDateInd] === trackerApp.holidaysByCountry[currCountryInd + 1][currDateToCompare]) {
+//     //                 sharedHolidays.push(trackerApp.holidaysByCountry[currCountryInd][currDateInd]);
+//     //             }
+//     //             // trackerApp.holidaysByCountry[currDateInd];
+//     //         }
+//     //     }
+//     // }
+
+//     console.log("Shared Holidays Array: ", newHolidays);
+
+
+
+// }
 
 
 
@@ -263,8 +315,8 @@ trackerApp.filterHolidays = (dataFromApi, indexVal) => {
                 // const holidaysInDateRange = holiDate;
                 // console.log("Date vault:", dateVault);
 
-                console.log('indexVal:', indexVal);
-                console.log('trackerApp HolidaysbyCountry: ', trackerApp.holidaysByCountry);
+                // console.log('indexVal:', indexVal);
+                // console.log('trackerApp HolidaysbyCountry: ', trackerApp.holidaysByCountry);
                 currentHolidays.push(holiDate);
                 // trackerApp.holidaysByCountry[indexVal].push(holiDate);
                 // console.log("holidayData[j]:", holidayData[j]);
