@@ -89,13 +89,26 @@ trackerApp.getHolidays = () => {
 
         event.preventDefault();
 
+        // Reset error log array to empty
+        let errorLog = [];
+
         trackerApp.startDate = new Date(document.getElementById("start").value);
         trackerApp.endDate = new Date(document.getElementById("end").value);
         trackerApp.year = trackerApp.startDate.getFullYear();
 
-        // Only run this function if the start and end dates selected are valid
+        // Push "invalid date range" error to errorLog array if end date input is earlier than start date.
         if (trackerApp.startDate > trackerApp.endDate) {
-            alert("Please select a valid date range.");
+            errorLog.push("Please select a valid date range.");
+        }
+
+        // Push "Please select start and end dates in the same year." to error log array if start and end dates are on different years.
+        if (trackerApp.startDate.getFullYear() !== trackerApp.endDate.getFullYear()) {
+            errorLog.push("Please select start and end dates in the same year.");
+        }
+
+        // Only fetch from the API if errorLog array is empty.
+        if (errorLog.length > 0) {
+            alert(errorLog.join("\n"));
         } else {
             // Reset selected countries to empty array
             trackerApp.selectedCountries = [];
@@ -162,6 +175,10 @@ trackerApp.getHolidays = () => {
                             console.log("successfully ran filterSharedHolidays()- Should run once only");
                         }
                     })
+                    .catch(error => {
+                        // Logs out the error when API fetch fails
+                        console.log(`Error, unable to fetch country selection #${index + 1} from API: `, error);
+                    })
             }
         }
     })
@@ -186,6 +203,7 @@ trackerApp.filterSharedHolidays = () => {
                 if (counter === trackerApp.selectedCountries.length) {
                     trackerApp.sharedHolidays.push(trackerApp.allHolidays[i]);
                     // console.log("storing date");
+                    break;
                 }
             }
         }
