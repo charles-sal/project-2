@@ -152,6 +152,11 @@ input[type=date]{
      font-size: 1rem;
 } */
 
+/* select:invalid{
+    border-color: blue;
+    outline-color: black;
+} */
+
 /* Formatting for submit and reset buttons */
 button{
     letter-spacing: 0.5rem;

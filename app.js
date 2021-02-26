@@ -8,14 +8,8 @@ trackerApp.apiUrl = "https://calendarific.com/api/v2/";
 // trackerApp.apiKey = "cfcdc8d5af30432ed42334fb974070b9949133aa";
 trackerApp.apiKey = "2d3eddbd0f5ceef04711b52ea8b1742b41b52a62";
 
+// stores the number of weekdays in index 0 and the number of weekends in index 1
 trackerApp.daysParam = [];
-
-trackerApp.startDate = new Date(document.getElementById("start").value);
-
-
-trackerApp.endDate = new Date(document.getElementById("end").value);
-
-trackerApp.year = trackerApp.startDate.getFullYear();
 
 // trackerApp.countries = document.querySelector('select').querySelectorAll('option').value;
 
@@ -25,12 +19,17 @@ trackerApp.selectedCountries = [];
 // add holiday dates array of selected countries
 trackerApp.holidaysByCountry = [];
 
+// Add array of all previously retrieved countries that we ran through the API
+trackerApp.retrievedCountries = [];
+
 // add empty array to track all holidays from all selected countries (1-D array)
 trackerApp.allHolidays = [];
 
 // add empty array  to keep the number of shared holidays between all selected countries
 trackerApp.sharedHolidays = [];
 
+// add new variable to track the number of filtered working days for all countries retrieved 
+trackerApp.filteredWorkingDays = 0;
 
 
 // trackerApp.country = 'US';
@@ -86,78 +85,85 @@ trackerApp.getHolidays = () => {
 
     //use the URL constructor to specify the parameters we wish to include in our API endpoint (AKA in the request we are making to the API)
 
-
-
     document.querySelector('form').addEventListener('submit', (event) => {
 
         event.preventDefault();
 
-        // Reset selected countries to empty array
-        trackerApp.selectedCountries = [];
+        trackerApp.startDate = new Date(document.getElementById("start").value);
+        trackerApp.endDate = new Date(document.getElementById("end").value);
+        trackerApp.year = trackerApp.startDate.getFullYear();
 
-        // Reset holiday dates array of selected countries
-        trackerApp.holidaysByCountry = [];
+        // Only run this function if the start and end dates selected are valid
+        if (trackerApp.startDate > trackerApp.endDate) {
+            alert("Please select a valid date range.");
+        } else {
+            // Reset selected countries to empty array
+            trackerApp.selectedCountries = [];
 
-        // Reset all holidays to empty array
-        trackerApp.allHolidays = [];
+            // Reset holiday dates array of selected countries
+            trackerApp.holidaysByCountry = [];
 
-        // Reset array of holidays shared by all selected countries to 0
-        trackerApp.sharedHolidays = [];
+            // Reset array of all previously retrieved countries that we ran through the API
+            trackerApp.retrievedCountries = [];
 
-        const allUserCountrySelections = document.querySelector('select').selectedOptions;
+            // Reset all holidays to empty array
+            trackerApp.allHolidays = [];
 
-        // Push all selected country codes into trackerApp.countries array
-        for (let index = 0; index < allUserCountrySelections.length; index++) {
-            trackerApp.selectedCountries.push(allUserCountrySelections[index].value);
+            // Reset array of holidays shared by all selected countries to 0
+            trackerApp.sharedHolidays = [];
 
-            console.log(trackerApp.selectedCountries);
+            // Reset the daysParam array to an empty array
+            trackerApp.daysParam = [];
 
-            // CW: Need to pass in all selected countries from trackerApp.countries array into the URL.searh.country and call the API the same number of times as the number of countries selected.
+            // Reset the number of filtered working days between all retrieved countries to 0
+            trackerApp.filteredWorkingDays = 0
 
-            // for (let i = 0; i < trackerApp.selectedCountries.length; i++) {
-            const url = new URL(trackerApp.apiUrl + `holidays`);
-            url.search = new URLSearchParams({
-                api_key: trackerApp.apiKey,
-                country: trackerApp.selectedCountries[index],
-                year: trackerApp.year,
-            })
+            const allUserCountrySelections = document.querySelector('select').selectedOptions;
 
-            //using the fetch API to make a request to the Calendarific API photos endpoint
-            fetch(url)
-                .then((response) => {
-                    // console.log(response);
-                    //parse this response into JSON
-                    //return JSON response so that it can be used in the next function
-                    return response.json();
+            // Push all selected country codes into trackerApp.countries array
+            for (let index = 0; index < allUserCountrySelections.length; index++) {
+                trackerApp.selectedCountries.push(allUserCountrySelections[index].value);
+
+                console.log(trackerApp.selectedCountries);
+
+                // CW: Need to pass in all selected countries from trackerApp.countries array into the URL.searh.country and call the API the same number of times as the number of countries selected.
+
+                // for (let i = 0; i < trackerApp.selectedCountries.length; i++) {
+                const url = new URL(trackerApp.apiUrl + `holidays`);
+                url.search = new URLSearchParams({
+                    api_key: trackerApp.apiKey,
+                    country: trackerApp.selectedCountries[index],
+                    year: trackerApp.year,
                 })
 
-                //parse the JSON Promise and log out readable data (AKA data JSON format)
-                .then((jsonResponse) => {
-                    // console.log(jsonResponse);
+                //using the fetch API to make a request to the Calendarific API photos endpoint
+                fetch(url)
+                    .then((response) => {
+                        // console.log(response);
+                        //parse this response into JSON
+                        //return JSON response so that it can be used in the next function
+                        return response.json();
+                    })
 
-                    //pass the data into the displayPhotos method
-                    //AKA call the displayPhotos within getPhotos
-                    trackerApp.filterHolidays(jsonResponse, index);
-                    // log out array of all holidays of selected countries
-                    console.log("TrackerApp Holidays by Country:", trackerApp.holidaysByCountry);
-
-                    // Perform comparison of shared holidays between countries
-                    // trackerApp.compareSharedHolidays();
-
-                    console.log("all holidays: ", trackerApp.allHolidays);
-
-                    // Run this function only if we have cycled through to the last selected country on the list of selected countries
-                    if (index === allUserCountrySelections.length - 1) {
-                        trackerApp.filterSharedHolidays();
-                        console.log("successfully ran filterSharedHolidays()- Should run once only");
-                    }
-
-                })
+                    //parse the JSON Promise and log out readable data (AKA data JSON format)
+                    .then((jsonResponse) => {
+                        //pass the data into the displayPhotos method
+                        //AKA call the displayPhotos within getPhotos
+                        trackerApp.filterHolidays(jsonResponse, index);
+                        // log out array of all holidays of selected countries
+                        console.log("TrackerApp Holidays by Country:", trackerApp.holidaysByCountry);
+                        console.log("Retrieved Countries: ", trackerApp.retrievedCountries);
+                        // Perform comparison of shared holidays between countries
+                        // trackerApp.compareSharedHolidays();
+                        console.log("all holidays: ", trackerApp.allHolidays);
+                        // Run this function only if we have cycled through to the last selected country on the list of selected countries
+                        if (index === allUserCountrySelections.length - 1) {
+                            trackerApp.filterSharedHolidays();
+                            console.log("successfully ran filterSharedHolidays()- Should run once only");
+                        }
+                    })
+            }
         }
-
-        // // Perform comparison of shared holidays between countries
-        // trackerApp.compareSharedHolidays();
-
     })
 }
 
@@ -186,6 +192,11 @@ trackerApp.filterSharedHolidays = () => {
 
     }
     console.log('All shared holidays: ', trackerApp.sharedHolidays);
+
+    trackerApp.filteredWorkingDays = trackerApp.daysParam[0] - trackerApp.sharedHolidays.length;
+
+    console.log('Number of workdays between given dates:', trackerApp.filteredWorkingDays);
+    console.log('Number of shared holidays between given dates:', trackerApp.sharedHolidays.length);
 
 }
 
@@ -278,33 +289,29 @@ trackerApp.filterHolidays = (dataFromApi, indexVal) => {
     // const ul = document.querySelector('ul');
     trackerApp.calcDays();
     // console.log(trackerApp.daysParam);
-
-
     const holidayData = [];
     let j = 0;
     let counter = 0;
     let holidays = 0;
-    let filteredWorkingDays = 0;
+    // let filteredWorkingDays = 0;
     // let sharedHolidays = 0;
     let currentHolidays = [];
     // console.log(dataFromApi.response.holidays);
+    let retrievedCountry = '';
 
     for (i = 0; i < dataFromApi.response.holidays.length; i++) {
-
-
 
         if (dataFromApi.response.holidays[i].type[0] === "National holiday" && dataFromApi.response.holidays[i].locations === "All") {
 
             holidayData.push(dataFromApi.response.holidays[i].date.iso);
             const holiDate = new Date(holidayData[j]);
 
+            console.log(dataFromApi.response.holidays[i].country.id);
+
             // let holiDateArray=[];
             // holiDateArray.push(holiDate);
 
-
             let holiDay = holiDate.getDay();
-
-
 
             j++;
 
@@ -321,6 +328,7 @@ trackerApp.filterHolidays = (dataFromApi, indexVal) => {
                 // trackerApp.holidaysByCountry[indexVal].push(holiDate);
                 // console.log("holidayData[j]:", holidayData[j]);
 
+                // push all holidays from this country into a stacked array
                 trackerApp.allHolidays.push(holiDate);
 
                 holidays++;
@@ -335,11 +343,19 @@ trackerApp.filterHolidays = (dataFromApi, indexVal) => {
 
     trackerApp.holidaysByCountry.push(currentHolidays);
 
-    filteredWorkingDays = trackerApp.daysParam[0] - holidays;
+    // Push the retrieved country into trackerApp.retrievedCountries that corresponds to the current holidays that we are running.
+    trackerApp.retrievedCountries.push(dataFromApi.response.holidays[0].country.id);
 
+
+
+
+    // trackerApp.countryCode
+
+    // filteredWorkingDays = trackerApp.daysParam[0] - trackerApp.sharedHolidays.length;
+    // filteredWorkingDays = trackerApp.daysParam[0] - trackerApp.sharedHolidays.length;
     // console.log('Number of workdays between given dates:', filteredWorkingDays);
 
-    // console.log('Number of holidays between given dates:', holidays);
+    // console.log('Number of shared holidays between given dates:', trackerApp.sharedHolidays.length);
 
     // console.log('Holidays that fall on weekends:', counter);
 
