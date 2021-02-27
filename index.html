@@ -28,37 +28,57 @@
 
           <li class="eachGraphContainer">
             <h2>Total Working Days</h2>
-            <div class="graphOuter">
+            <div id="workingDays" class="graphOuter">
               <!-- <div class="w3-green" style="height:24px;width:80%; display:inline-block;"></div> -->
               <div class="graph"></div>
-              <h3>10</h3>
+              <h3>0</h3>
             </div>
           </li>
 
           <li class="eachGraphContainer">
-            <h2>Total Holidays</h2>
-            <div class="graphOuter">
+            <h2>Total Weekend Days</h2>
+            <div id="weekendDays" class="graphOuter">
               <!-- <div class="w3-green" style="height:24px;width:80%; display:inline-block;"></div> -->
-              <div class="graph" style="width:20%;"></div>
-              <h3>3</h3>
+              <div class="graph"></div>
+              <h3>0</h3>
             </div>
           </li>
+
+          <!-- <li class="eachGraphContainer">
+            <h2>Total Holidays</h2>
+            <div id="totalHolidays" class="graphOuter">
+             
+              <div class="graph"></div>
+              <h3>0</h3>
+            </div>
+          </li> -->
 
           <li class="eachGraphContainer">
             <h2>Shared Holidays</h2>
-            <div class="graphOuter">
+            <div id="sharedHolidays" class="graphOuter">
               <!-- <div class="w3-green" style="height:24px;width:80%; display:inline-block;"></div> -->
-              <div class="graph" style="width:10%;"></div>
-              <h3>1</h3>
+              <div class="graph"></div>
+              <h3>0</h3>
             </div>
           </li>
 
-          <li class="eachGraphContainer">
+          <li class="eachGraphContainer graphsByCountry">
             <h2>Holidays by Country</h2>
-            <div class="graphOuter">
-              <!-- <div class="w3-green" style="height:24px;width:80%; display:inline-block;"></div> -->
-              <div class="graph" style="width:10%;"></div>
-              <h3>1</h3>
+            <div class="graphsByCountryBg">
+              <div id="country1" class="graphOuter">
+                <div class="graph"></div>
+                <h3>Country #1, 0</h3>
+              </div>
+
+              <div id="country2" class="graphOuter">
+                <div class="graph"></div>
+                <h3>Country #2, 0</h3>
+              </div>
+
+              <div id="country3" class="graphOuter">
+                <div class="graph"></div>
+                <h3>Country #3, 0</h3>
+              </div>
             </div>
           </li>
 
@@ -77,9 +97,9 @@
             <label for="end">End Date</label>
             <input type="date" id="end" name="end">
           </div>
-          <label for="countries" class="sr-only">Choose all countries on your team from this list.</label>
-          <select name="countries" id="countries" multiple="true" max="3" required="true" size="8">
-            <option value="" class="placehOption">Choose team countries</option>
+          <label for="countries" class="sr-only">Choose up to 3 countries on your team from this list.</label>
+          <select name="countries" id="countries" multiple="true" max="3" required="true" size="7">
+            <option value="" class="placehOption">Pick up to 3 team countries</option>
             <!-- <option value="US">US</option>
           <option value="CA">CA</option> -->
           </select>

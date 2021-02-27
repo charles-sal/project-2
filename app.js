@@ -1,17 +1,20 @@
 
-//create app object
+//create trackerApp object
 const trackerApp = {};
 
 //save relevant API information
 trackerApp.apiUrl = "https://calendarific.com/api/v2/";
 // Sal's key
 // trackerApp.apiKey = "cfcdc8d5af30432ed42334fb974070b9949133aa";
-trackerApp.apiKey = "2d3eddbd0f5ceef04711b52ea8b1742b41b52a62";
+
+// Charles' old key
+// trackerApp.apiKey = "2d3eddbd0f5ceef04711b52ea8b1742b41b52a62";
+
+//Sal's new key
+trackerApp.apiKey = "099ee5f3450265283c463cb3031de3e4d7164028";
 
 // stores the number of weekdays in index 0 and the number of weekends in index 1
 trackerApp.daysParam = [];
-
-// trackerApp.countries = document.querySelector('select').querySelectorAll('option').value;
 
 // add selectedCountries property in global scope
 trackerApp.selectedCountries = [];
@@ -19,7 +22,7 @@ trackerApp.selectedCountries = [];
 // add holiday dates array of selected countries
 trackerApp.holidaysByCountry = [];
 
-// Add array of all previously retrieved countries that we ran through the API
+// Add array of all previously retrieved countries that we ran through the API.  The indices in this array are in sync with the indices in the trackerApp.holidaysByCountry array
 trackerApp.retrievedCountries = [];
 
 // add empty array to track all holidays from all selected countries (1-D array)
@@ -31,10 +34,40 @@ trackerApp.sharedHolidays = [];
 // add new variable to track the number of filtered working days for all countries retrieved 
 trackerApp.filteredWorkingDays = 0;
 
+// Function to set the start date as the user's current date (for improved UX)
+trackerApp.setCurrentDate = () => {
+    // Set todaysMonthSt and todaysDaySt variables to empty
+    let todaysMonthSt = '';
+    let todaysDaySt = '';
 
-// trackerApp.country = 'US';
+    const todaysDate = new Date();
 
+    const todaysDay = todaysDate.getDate();
+    const todaysMonth = todaysDate.getMonth() + 1;
+    const todaysYear = todaysDate.getFullYear();
 
+    // Appends a 0 to the front of the month number if the month is single digit
+    if (todaysMonth < 10) {
+        todaysMonth.toString();
+        todaysMonthSt = '0' + todaysMonth;
+    } else {
+        todaysMonthSt = todaysMonth;
+    }
+
+    // Appends a 0 to the front of the date number if the date is single digit
+    if (todaysDay < 10) {
+        todaysDay.toString();
+        todaysDaySt = '0' + todaysDay;
+    } else {
+        todaysDaySt = todaysDay;
+    }
+
+    // Set the start date input field with the user's current date
+    const startDateEl = document.getElementById('start');
+    startDateEl.value = `${todaysYear}-${todaysMonthSt}-${todaysDaySt}`;
+}
+
+// Function to get the list of all countries supported by the API
 trackerApp.getCountries = () => {
     const url = new URL(trackerApp.apiUrl + `countries`);
     url.search = new URLSearchParams({
@@ -53,6 +86,7 @@ trackerApp.getCountries = () => {
         })
 }
 
+// Function to append list of all countries received from the API to the dropdown menu on the .sidePane
 trackerApp.appendCountries = (countriesFromApi) => {
     // i=0;
     let country = '';
@@ -78,7 +112,71 @@ trackerApp.appendCountries = (countriesFromApi) => {
 
 // Placeholder function to display trackerApp data onto screen
 trackerApp.displayData = () => {
-    
+
+
+
+    //Tracks unused countries (country #2 and #3) if user does not select them
+    const unusedCountryEl2 = document.querySelector(`#country2`);
+    const unusedCountryEl3 = document.querySelector(`#country3`);
+
+    // Renders country #2 and country #3 elements to be visible on page.
+    unusedCountryEl2.classList.remove('hideEl');
+    unusedCountryEl3.classList.remove('hideEl');
+
+    // Resets all bar graphs and their values to 0
+    // for (let i = 0; i < 3; i++) {
+    //     const countryEl = document.querySelector(`#country${i + 1} .graph`);
+    //     countryEl.style.width = `0%`;
+    //     const countryNum = document.querySelector(`#country${i + 1} h3`);
+    //     countryNum.textContent = `Country #${i + 1}, 0`;
+    // }
+
+    // For total working days bar graph
+    const totalWorkingDaysEl = document.querySelector('#workingDays .graph');
+    totalWorkingDaysEl.style.width = '80%';
+    const totalWorkingDaysNumEl = document.querySelector('#workingDays h3');
+    totalWorkingDaysNumEl.textContent = trackerApp.filteredWorkingDays;
+
+    // For total weekend days bar graph
+    const totalWeekendDaysEl = document.querySelector('#weekendDays .graph');
+    totalWeekendDaysEl.style.width = `${(trackerApp.daysParam[1] / trackerApp.filteredWorkingDays) * 80}%`;
+    const totalWeekendDaysNumEl = document.querySelector('#weekendDays h3');
+    totalWeekendDaysNumEl.textContent = trackerApp.daysParam[1];
+
+    // For shared holidays bar graph
+    const sharedHolidaysEl = document.querySelector('#sharedHolidays .graph');
+    sharedHolidaysEl.style.width = `${(trackerApp.sharedHolidays.length / trackerApp.filteredWorkingDays) * 80}%`;
+    const sharedHolidaysNum = document.querySelector('#sharedHolidays h3');
+    sharedHolidaysNum.textContent = trackerApp.sharedHolidays.length;
+
+
+    // Function to hide unused countries #2 and/or #3 from the results if necessary
+    if (trackerApp.retrievedCountries.length === 2) {
+        // Display: none for the third DIV
+        unusedCountryEl3.classList.add('hideEl');
+        // console.log(unusedCountryEl3);
+    } else if (trackerApp.retrievedCountries.length === 1) {
+        // Display:none for the second and third DIV
+        unusedCountryEl2.classList.add('hideEl');
+        unusedCountryEl3.classList.add('hideEl');
+    }
+
+    console.log(trackerApp.retrievedCountries);
+    // For holidays by country #1, #2, and #3 bar graphs
+    for (let i = 0; i < trackerApp.retrievedCountries.length; i++) {
+        const countryEl = document.querySelector(`#country${i + 1} .graph`);
+        countryEl.style.width = `${(trackerApp.holidaysByCountry[i].length / trackerApp.filteredWorkingDays) * 80}%`;
+        const countryNum = document.querySelector(`#country${i + 1} h3`);
+        countryNum.textContent = `${trackerApp.retrievedCountries[i].toUpperCase()}, ${trackerApp.holidaysByCountry[i].length}`;
+        console.log(countryNum);
+    }
+
+    // document.querySelector('.resultsContainer').style.display = 'block';
+    console.log(document.querySelector('.resultsContainer'));
+    // document.getElementById(‘id1’).style.color = ‘red’
+
+
+
 }
 
 trackerApp.getHolidays = () => {
@@ -88,23 +186,29 @@ trackerApp.getHolidays = () => {
     document.querySelector('form').addEventListener('submit', (event) => {
 
         event.preventDefault();
-
+        document.querySelector('.resultsContainer').style.display = 'block';
         // Reset error log array to empty
         let errorLog = [];
         let apiError = false;
 
+        // Get the user input from date selectors and store the values in order to convert them into arrays to pass it on to the Date() constructors
         trackerApp.startDate = new Date(document.getElementById("start").value);
         trackerApp.endDate = new Date(document.getElementById("end").value);
         trackerApp.year = trackerApp.startDate.getFullYear();
 
         // Push "invalid date range" error to errorLog array if end date input is earlier than start date.
-        if (trackerApp.startDate > trackerApp.endDate) {
+        if (trackerApp.startDate >= trackerApp.endDate) {
             errorLog.push("Please select a valid date range.");
         }
 
         // Push "Please select start and end dates in the same year." to error log array if start and end dates are on different years.
         if (trackerApp.startDate.getFullYear() !== trackerApp.endDate.getFullYear()) {
             errorLog.push("Please select start and end dates in the same year.");
+        }
+
+        // Checks if user has selected > 3 countries
+        if (trackerApp.selectedCountries.length > 3) {
+            errorLog.push("Please select 3 countries or less.")
         }
 
         // Only fetch from the API if errorLog array is empty.
@@ -213,7 +317,7 @@ trackerApp.filterSharedHolidays = () => {
                 if (counter === trackerApp.selectedCountries.length) {
                     trackerApp.sharedHolidays.push(trackerApp.allHolidays[i]);
                     // console.log("storing date");
-                    break;
+                    // break;
                 }
             }
         }
@@ -226,90 +330,9 @@ trackerApp.filterSharedHolidays = () => {
     console.log('Number of workdays between given dates:', trackerApp.filteredWorkingDays);
     console.log('Number of shared holidays between given dates:', trackerApp.sharedHolidays.length);
 
+    setTimeout(function () { trackerApp.displayData(); }, 500);
+
 }
-
-// function to compare shared holidays between selected countries
-// trackerApp.compareSharedHolidays = () => {
-//     // trackerApp.selectedCountries
-//     // trackerApp.holidaysByCountry
-
-//     // Define shared holidays array
-//     let sharedHolidays = [];
-
-//     for (let j = 0; j < trackerApp.allHolidays.length; j++) {
-
-//         for (let i = 0; i < trackerApp.allHolidays.length; i++) {
-//             if (i === j) {
-//                 // Do nothing
-//             }
-//             else if (trackerApp.allHolidays[j].getTime() === trackerApp.allHolidays[i].getTime()) {
-//                 sharedHolidays.push(trackerApp.allHolidays[j]);
-//             }
-//         }
-//     }
-
-//     for (let j = 0; j < sharedHolidays.length; j++) {
-
-//         for (let i = 0; i < sharedHolidays.length; i++) {
-//             if (i === j) {
-//                 // Do nothing
-//             }
-//             else if (sharedHolidays[j].getTime() === sharedHolidays[i].getTime()) {
-//                 // sharedHolidays.pop(trackerApp.allHolidays[j]);
-//                 sharedHolidays.pop();
-//             }
-//         }
-
-//     }
-
-
-//     //     result = array.filter(function(a, i, aa){
-//     //     (aa.indexOf(a) === i && aa.lastIndexOf(a) !== i);
-//     //     });    
-
-//     // console.log(result);
-
-
-//     // var arr = ["apple", "bannana", "orange", "apple", "orange"];
-
-//     // sharedHolidays = sharedHolidays.filter(function (item, index, inputArray) {
-//     //     return inputArray.indexOf(item) == index;
-//     // });
-
-
-//     console.log("trackerApp allholidays: ", trackerApp.allHolidays);
-//     console.log("Shared Holidays", sharedHolidays);
-
-//     let newHolidays = sharedHolidays.slice(0, (sharedHolidays.length / trackerApp.selectedCountries.length) - 1);
-
-
-
-
-
-//     // // For loop to cycle through each country within the selected countries array
-//     // for (let currCountryInd = 0; currCountryInd < trackerApp.selectedCountries.length; currCountryInd++) {
-
-//     //     // For loop to cycle through all dates for the currently selected county in the selected countries array
-//     //     for (let currDateInd = 0; currDateInd < trackerApp.holidaysByCountry[currCountryInd][currDateInd].length; currDateInd++) {
-
-//     //         // For loop to compare the current holiday for the selected country with each holiday in the next selected country on the list 
-//     //         for (let currDateToCompare = 0; currDateToCompare < trackerApp.holidaysByCountry[currCountryInd + 1][currDateToCompare].length; currDateToCompare++) {
-
-//     //             if (trackerApp.holidaysByCountry[currCountryInd][currDateInd] === trackerApp.holidaysByCountry[currCountryInd + 1][currDateToCompare]) {
-//     //                 sharedHolidays.push(trackerApp.holidaysByCountry[currCountryInd][currDateInd]);
-//     //             }
-//     //             // trackerApp.holidaysByCountry[currDateInd];
-//     //         }
-//     //     }
-//     // }
-
-//     console.log("Shared Holidays Array: ", newHolidays);
-
-
-
-// }
-
-
 
 trackerApp.filterHolidays = (dataFromApi) => {
 
@@ -364,7 +387,6 @@ trackerApp.filterHolidays = (dataFromApi) => {
                     counter++;
                 }
             }
-
         }
     }
     // console.log(trackerApp.daysParam);
@@ -374,25 +396,6 @@ trackerApp.filterHolidays = (dataFromApi) => {
     // Push the retrieved country into trackerApp.retrievedCountries that corresponds to the current holidays that we are running.
     trackerApp.retrievedCountries.push(dataFromApi.response.holidays[0].country.id);
 
-
-
-
-    // trackerApp.countryCode
-
-    // filteredWorkingDays = trackerApp.daysParam[0] - trackerApp.sharedHolidays.length;
-    // filteredWorkingDays = trackerApp.daysParam[0] - trackerApp.sharedHolidays.length;
-    // console.log('Number of workdays between given dates:', filteredWorkingDays);
-
-    // console.log('Number of shared holidays between given dates:', trackerApp.sharedHolidays.length);
-
-    // console.log('Holidays that fall on weekends:', counter);
-
-    // console.log('Number of weekends between given dates:', trackerApp.daysParam[1]);
-
-    // Push holidays by selected countries into our trackerApp.holidaysByCountry array
-    // trackerApp.holidaysByCountry.push(holidayData);
-
-    // console.log(holidayData);
 }
 
 
@@ -400,16 +403,6 @@ trackerApp.calcDays = () => {
 
     // hours*minutes*seconds*milliseconds
     const oneDay = 24 * 60 * 60 * 1000;
-
-    // Get the user input from date selector and store the value in order to convert it into an array to pass it on to the Date() constructor
-
-    // const startDate = new Date(trackerApp.startDateInput);
-    // console.log(startDate);
-
-
-
-    // const endDate = new Date(trackerApp.endDateInput);
-    // console.log(endDate);
 
     // Get the duration by subtracting the Date() constructors between start and end date. Because the date constructor value is represnted by the number of millisceonds we need to divide by the number of milliseconds per day to get back the number of days. We then add 1 in order to count the first day.
     let totalDays = ((trackerApp.endDate - trackerApp.startDate) / oneDay) + 1;
@@ -457,7 +450,6 @@ trackerApp.calcDays = () => {
 
     // Checks if startDay or endDay falls on a Saturday to add an extra weekend day
     if (extraDays > 0) {
-
         if ((startDay <= 6 && endDay === 6) || startDay === 7) {
             weekEndDays++;
         }
@@ -479,9 +471,9 @@ trackerApp.calcDays = () => {
     // days.push(weekEndDays);
 }
 
-
 //create an initialization method
 trackerApp.init = () => {
+    trackerApp.setCurrentDate();
 
     trackerApp.getCountries();
 
