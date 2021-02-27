@@ -73,6 +73,15 @@ h1{
     background: var(--beige);
 }
 
+h2{
+    margin: 20px 0;
+    /* padding: 20px 30px; */
+    color: var(--violet);
+    font-size: 1.4rem;
+    letter-spacing: 0.25rem;
+    /* width: 100%; */
+}
+
 .featuredContent *{
     border-radius: 15px;
 }
@@ -90,7 +99,74 @@ h1{
 .resultsContainer{
     /* margin-top: 15px; */
     height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
 }
+
+/* Container for each graph and its accompanying info (text, etc.) */
+.eachGraphContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.eachGraphContainer *{
+    border: 1px solid red;
+}
+
+/* Flex properties on each title and its associated bar graph */
+.eachGraphContainer h2, div{
+    flex: 0 1 50%;
+}
+
+/* Outer flex container for each bar graph and its associated number (days) */
+/* .graphOuter{
+    display: flex;
+    align-items: center;
+} */
+
+/* Properties for the background of each bar graph */
+/* .graphBG{
+    width: 80%;
+    height: 50px;
+
+} */
+
+.graphOuter{
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.graphOuter div, h3{
+    /* display: inline-block; */
+    margin: 0;
+}
+
+.graphOuter h3{
+    /* flex: 0 1 20%; */
+    width: 15%;
+    color: var(--violet);
+    font-size: 1.6rem;
+    letter-spacing: 0.25rem;
+    /* margin-left: 15px; */
+}
+
+
+/* Properties for the bar graph itself */
+.graph{
+  height:50px;
+  width: 20%;
+  background: var(--bronze);
+  text-align: center;
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+}    
+
 
 /* Formatting for sidePane (to house all user inputs) */
 .sidePane{
