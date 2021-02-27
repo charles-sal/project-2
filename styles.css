@@ -31,6 +31,7 @@ body{
 
 body *{
     font-family: 'Poiret One', arial;
+    /* border: 1px solid red; */
 }
 
 /* Wrapper Properties */
@@ -49,12 +50,25 @@ body *{
     justify-content: center;
     align-items: center;
     flex-direction: row;
-
+    padding-top: 20px;
+    /* height: 700px; */
     height: 100vh;
 }
 
 .mainWindow>*{
-    /* border: 7px solid var(--green); */
+    
+    border-radius: 15px;
+    
+}
+
+.windowInner{
+    display: flex;
+    align-items: center;
+    height: max-content;
+    /* border: 3px solid green; */
+}
+
+.windowInner>*{
     border-radius: 15px;
 }
 
@@ -64,7 +78,7 @@ body *{
 }
 
 h1{
-    margin: 20px 0;
+    margin: 0;
     padding: 20px 30px;
     color: var(--violet);
     font-size: 2.4rem;
@@ -94,7 +108,7 @@ h2{
 }
 
 .featuredContent *{
-    border-radius: 7px;
+    border-radius: 15px;
 }
 
 /* Formatting for featureContent container (to house all output results inside) */
@@ -109,12 +123,14 @@ h2{
 
 .resultsContainer{
     /* margin-top: 15px; */
-    height: 500px;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     padding: 30px;
+    margin-top: 25px;
+    margin-bottom: 0;
 }
 
 /* Container for each graph and its accompanying info (text, etc.) */
@@ -154,7 +170,7 @@ h2{
 
 .graphOuter h3{
     /* flex: 0 1 20%; */
-    width: 15%;
+    /* width: 15%; */
     color: var(--violet);
     font-size: 1.3rem;
     letter-spacing: 0.25rem;
@@ -169,6 +185,7 @@ h2{
   width: 80%;
   background: var(--violet);
   border-right: 3px solid var(--teal);
+  border-radius: 7px;
   /* text-align: center; */
   /* display: flex;
   justify-content: center;
@@ -180,9 +197,13 @@ h2{
 .sidePane{
     /* margin-left: 15px; */
     /* background: var(--beige); */
-    flex: 0 1 30%;
-    padding: 15px 0;
+    display: flex;
+    align-items: center;
+    flex: 1 1 20%;
+    padding: 15px 15px;
     /* width: 30%; */
+    height: 100%;
+    /* width: 300px; */
   
 }
 
@@ -198,18 +219,24 @@ form *{
     border: none;
 }
 
-
 .dateSelector{
     flex: 0 1 100%;
-    padding: 20px 0;
+    /* padding: 20px 0; */
+    text-align: center;
+    margin-bottom: 15px;
+    /* display: flex;
+    flex-direction: column; */
     /* border: 1px solid red; */
 }
 
 /* Start and End date label formatting */
-label[for=start], label[for=end]{
+label[for=start], 
+label[for=end]{
     color: var(--violet);
     font-size: 1.3rem;
-    letter-spacing: 0.3rem
+    letter-spacing: 0.3rem;
+    /* text-align: left; */
+    /* width: 80%; */
 }
 
 /* Formatting for date input fields and select field*/
@@ -223,13 +250,59 @@ input[type=date], select{
     border-radius: 5px;
 }
 
-select{
-    width: 80%;
+select, label,input[type=date]{
+    width: 250px;
+    min-width: 80%;
 }
 
 /* Formatting for input date fields */
 input[type=date]{
     border-bottom: 1px solid var(--green);
+    margin-top: 7px;
+
+}
+
+
+
+
+/* .dateSelector, select{
+    width: 80%;
+} */
+
+/* .dateSelector{
+    flex: 0 1 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin-bottom: 15px;
+} */
+
+/* Start and End date label formatting */
+/* label[for=start], label[for=end]{
+    margin-bottom: 7px;
+    font-size: 1.3rem;
+    letter-spacing: 0.3rem;
+    width: 100%;
+} */
+
+/* Formatting for date input fields and select field*/
+/* input[type=date], select{
+  
+    color: var(--violet);
+    font-size: 1.1rem;
+    outline: none;
+    padding: 2px 15px;
+    line-height: 1.4rem;
+    border-radius: 5px;
+    width: 80%;
+} */
+
+
+
+/* Formatting for input date fields */
+input[type=date]{
+    border-bottom: 1px solid var(--green);
+    /* width: 100%; */
 }
 
 /* option[value=us]{

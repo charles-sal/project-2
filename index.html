@@ -7,6 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Project Tracker</title>
   <link rel="stylesheet" href="styles.css">
+  <!-- <link rel="stylesheet" href="stylesTest.css"> -->
 
   <!-- Import Google Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -18,77 +19,78 @@
 
 
   <div class="wrapper mainWindow">
+    <div class="windowInner">
+      <section class="featuredContent">
+        <h1>Project Tracker</h1>
 
-    <section class="featuredContent">
-      <h1>Project Tracker</h1>
+        <!-- Graphs go in here -->
+        <ul class="resultsContainer">
 
-      <!-- Graphs go in here -->
-      <ul class="resultsContainer">
+          <li class="eachGraphContainer">
+            <h2>Total Working Days</h2>
+            <div class="graphOuter">
+              <!-- <div class="w3-green" style="height:24px;width:80%; display:inline-block;"></div> -->
+              <div class="graph"></div>
+              <h3>10</h3>
+            </div>
+          </li>
 
-        <li class="eachGraphContainer">
-          <h2>Total Working Days</h2>
-          <div class="graphOuter">
-            <!-- <div class="w3-green" style="height:24px;width:80%; display:inline-block;"></div> -->
-            <div class="graph"></div>
-            <h3>10</h3>
+          <li class="eachGraphContainer">
+            <h2>Total Holidays</h2>
+            <div class="graphOuter">
+              <!-- <div class="w3-green" style="height:24px;width:80%; display:inline-block;"></div> -->
+              <div class="graph" style="width:20%;"></div>
+              <h3>3</h3>
+            </div>
+          </li>
+
+          <li class="eachGraphContainer">
+            <h2>Shared Holidays</h2>
+            <div class="graphOuter">
+              <!-- <div class="w3-green" style="height:24px;width:80%; display:inline-block;"></div> -->
+              <div class="graph" style="width:10%;"></div>
+              <h3>1</h3>
+            </div>
+          </li>
+
+          <li class="eachGraphContainer">
+            <h2>Holidays by Country</h2>
+            <div class="graphOuter">
+              <!-- <div class="w3-green" style="height:24px;width:80%; display:inline-block;"></div> -->
+              <div class="graph" style="width:10%;"></div>
+              <h3>1</h3>
+            </div>
+          </li>
+
+
+        </ul>
+
+      </section>
+
+      <section class="sidePane">
+        <form action="">
+          <div class="dateSelector">
+            <label for="start">Start Date</label>
+            <input type="date" id="start" name="start">
           </div>
-        </li>
-
-        <li class="eachGraphContainer">
-          <h2>Total Holidays</h2>
-          <div class="graphOuter">
-            <!-- <div class="w3-green" style="height:24px;width:80%; display:inline-block;"></div> -->
-            <div class="graph" style="width:20%;"></div>
-            <h3>3</h3>
+          <div class="dateSelector">
+            <label for="end">End Date</label>
+            <input type="date" id="end" name="end">
           </div>
-        </li>
-
-        <li class="eachGraphContainer">
-          <h2>Shared Holidays</h2>
-          <div class="graphOuter">
-            <!-- <div class="w3-green" style="height:24px;width:80%; display:inline-block;"></div> -->
-            <div class="graph" style="width:10%;"></div>
-            <h3>1</h3>
-          </div>
-        </li>
-
-        <li class="eachGraphContainer">
-          <h2>Holidays by Country</h2>
-          <div class="graphOuter">
-            <!-- <div class="w3-green" style="height:24px;width:80%; display:inline-block;"></div> -->
-            <div class="graph" style="width:10%;"></div>
-            <h3>1</h3>
-          </div>
-        </li>
-
-
-      </ul>
-
-    </section>
-
-    <section class="sidePane">
-      <form action="">
-        <div class="dateSelector">
-          <label for="start">Start Date:</label>
-          <input type="date" id="start" name="start">
-        </div>
-        <div class="dateSelector">
-          <label for="end">End Date:</label>
-          <input type="date" id="end" name="end">
-        </div>
-        <select name="countries" id="countries" multiple="true" max="3" required>
-          <option value="" class="placehOption">Choose team countries</option>
-          <!-- <option value="US">US</option>
+          <label for="countries" class="sr-only">Choose all countries on your team from this list.</label>
+          <select name="countries" id="countries" multiple="true" max="3" required="true" size="8">
+            <option value="" class="placehOption">Choose team countries</option>
+            <!-- <option value="US">US</option>
           <option value="CA">CA</option> -->
-        </select>
-        <button type="reset">RESET</button>
-        <button type="submit">SUBMIT</button>
+          </select>
+          <button type="reset">RESET</button>
+          <button type="submit">SUBMIT</button>
 
 
-      </form>
+        </form>
 
-    </section>
-
+      </section>
+    </div>
   </div>
 
 
