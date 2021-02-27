@@ -78,7 +78,7 @@ trackerApp.appendCountries = (countriesFromApi) => {
 
 // Placeholder function to display trackerApp data onto screen
 trackerApp.displayData = () => {
-
+    
 }
 
 trackerApp.getHolidays = () => {
@@ -91,6 +91,7 @@ trackerApp.getHolidays = () => {
 
         // Reset error log array to empty
         let errorLog = [];
+        let apiError = false;
 
         trackerApp.startDate = new Date(document.getElementById("start").value);
         trackerApp.endDate = new Date(document.getElementById("end").value);
@@ -133,6 +134,13 @@ trackerApp.getHolidays = () => {
 
             const allUserCountrySelections = document.querySelector('select').selectedOptions;
 
+            const alertApiErrors = (countryIndex) => {
+                // Logs out the error when API fetch fails
+                if (countryIndex === allUserCountrySelections.length - 1 && apiError === true) {
+                    alert(`One or more countries were not retrieved. Please try again.`);
+                }
+            }
+
             // Push all selected country codes into trackerApp.countries array
             for (let index = 0; index < allUserCountrySelections.length; index++) {
                 trackerApp.selectedCountries.push(allUserCountrySelections[index].value);
@@ -152,7 +160,6 @@ trackerApp.getHolidays = () => {
                 //using the fetch API to make a request to the Calendarific API photos endpoint
                 fetch(url)
                     .then((response) => {
-                        // console.log(response);
                         //parse this response into JSON
                         //return JSON response so that it can be used in the next function
                         return response.json();
@@ -162,7 +169,7 @@ trackerApp.getHolidays = () => {
                     .then((jsonResponse) => {
                         //pass the data into the displayPhotos method
                         //AKA call the displayPhotos within getPhotos
-                        trackerApp.filterHolidays(jsonResponse, index);
+                        trackerApp.filterHolidays(jsonResponse);
                         // log out array of all holidays of selected countries
                         console.log("TrackerApp Holidays by Country:", trackerApp.holidaysByCountry);
                         console.log("Retrieved Countries: ", trackerApp.retrievedCountries);
@@ -174,10 +181,13 @@ trackerApp.getHolidays = () => {
                             trackerApp.filterSharedHolidays();
                             console.log("successfully ran filterSharedHolidays()- Should run once only");
                         }
+
+                        alertApiErrors(index);
                     })
                     .catch(error => {
-                        // Logs out the error when API fetch fails
-                        console.log(`Error, unable to fetch country selection #${index + 1} from API: `, error);
+
+                        apiError = true;
+                        alertApiErrors(index);
                     })
             }
         }
@@ -301,7 +311,7 @@ trackerApp.filterSharedHolidays = () => {
 
 
 
-trackerApp.filterHolidays = (dataFromApi, indexVal) => {
+trackerApp.filterHolidays = (dataFromApi) => {
 
     // query the document and find the first ul
     // const ul = document.querySelector('ul');
