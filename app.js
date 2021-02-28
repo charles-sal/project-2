@@ -6,7 +6,7 @@ const trackerApp = {};
 trackerApp.apiUrl = "https://calendarific.com/api/v2/";
 
 // API key
-trackerApp.apiKey = "099ee5f3450265283c463cb3031de3e4d7164028";
+trackerApp.apiKey = "7a972d65dd8c5d720ff7964ff537e32fff7fde67";
 
 // stores the number of weekdays in index 0 and the number of weekends in index 1
 trackerApp.daysParam = [];
