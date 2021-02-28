@@ -276,7 +276,6 @@ trackerApp.filterHolidays = (dataFromApi) => {
         if (dataFromApi.response.holidays[i].type[0] === "National holiday" && dataFromApi.response.holidays[i].locations === "All") {
             holidayData.push(dataFromApi.response.holidays[i].date.iso);
             const holiDate = new Date(holidayData[j]);
-            let holiDay = holiDate.getDay();
             j++;
 
             // Filters out all holidays between the start and end dates of the input date range and push them 1) to the currentHolidays array and 2) push them to the trackerApp.allHolidays array (which stores all holidays from all retieved countries into an array)
