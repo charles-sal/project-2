@@ -7,7 +7,6 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Project Tracker</title>
   <link rel="stylesheet" href="styles.css">
-  <!-- <link rel="stylesheet" href="stylesTest.css"> -->
 
   <!-- Import Google Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -17,51 +16,43 @@
 
 <body>
 
-
   <div class="wrapper mainWindow">
     <div class="windowInner">
       <section class="featuredContent">
+
         <h1>Project Tracker</h1>
 
         <!-- Graphs go in here -->
         <ul class="resultsContainer">
 
+          <!-- Total Working Days Graph Container -->
           <li class="eachGraphContainer">
             <h2>Total Working Days</h2>
             <div id="workingDays" class="graphOuter">
-              <!-- <div class="w3-green" style="height:24px;width:80%; display:inline-block;"></div> -->
               <div class="graph"></div>
               <h3>0</h3>
             </div>
           </li>
 
+          <!-- Total Weekend Days Graph Container -->
           <li class="eachGraphContainer">
             <h2>Total Weekend Days</h2>
             <div id="weekendDays" class="graphOuter">
-              <!-- <div class="w3-green" style="height:24px;width:80%; display:inline-block;"></div> -->
               <div class="graph"></div>
               <h3>0</h3>
             </div>
           </li>
 
-          <!-- <li class="eachGraphContainer">
-            <h2>Total Holidays</h2>
-            <div id="totalHolidays" class="graphOuter">
-             
-              <div class="graph"></div>
-              <h3>0</h3>
-            </div>
-          </li> -->
-
+          <!-- Shared Holidays Graph Container -->
           <li class="eachGraphContainer">
             <h2>Shared Holidays</h2>
             <div id="sharedHolidays" class="graphOuter">
-              <!-- <div class="w3-green" style="height:24px;width:80%; display:inline-block;"></div> -->
               <div class="graph"></div>
               <h3>0</h3>
             </div>
           </li>
 
+          <!-- Holidays by Country Graph Container -->
           <li class="eachGraphContainer graphsByCountry">
             <h2>Holidays by Country</h2>
             <div class="graphsByCountryBg">
@@ -82,13 +73,14 @@
             </div>
           </li>
 
-
         </ul>
 
       </section>
 
+      <!-- Side Pane container for user inputs -->
       <section class="sidePane">
-        <form action="">
+
+        <form action="#" method="#" name="calendarForm">
           <div class="dateSelector">
             <label for="start">Start Date</label>
             <input type="date" id="start" name="start">
@@ -99,22 +91,20 @@
           </div>
           <label for="countries" class="sr-only">Choose up to 3 countries on your team from this list.</label>
           <select name="countries" id="countries" multiple="true" max="3" required="true" size="7">
-            <option value="" class="placehOption">Pick up to 3 team countries</option>
-            <!-- <option value="US">US</option>
-          <option value="CA">CA</option> -->
+            <option value="defaultLabel" class="placehOption">Pick up to 3 team countries</option>
+            <!-- The list of countries avaiable from the API populates here using Javascript -->
           </select>
           <button type="reset">RESET</button>
           <button type="submit">SUBMIT</button>
-
 
         </form>
 
       </section>
     </div>
+
   </div>
 
-
-
+  <!-- Link to app.js file -->
   <script src="app.js"></script>
 
 </body>

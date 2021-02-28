@@ -1,5 +1,4 @@
 /*  Define Setup Snippet */
-
 html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,footer,header,nav,section{display:block}h1{font-size:2em;margin:.67em 0}figcaption,figure,main{display:block}figure{margin:1em 40px}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent;-webkit-text-decoration-skip:objects}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:inherit}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}dfn{font-style:italic}mark{background-color:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}audio,video{display:inline-block}audio:not([controls]){display:none;height:0}img{border-style:none}svg:not(:root){overflow:hidden}button,input,optgroup,select,textarea{font-family:sans-serif;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}button,html [type=button],[type=reset],[type=submit]{-webkit-appearance:button}button::-moz-focus-inner,[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner{border-style:none;padding:0}button:-moz-focusring,[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{display:inline-block;vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details,menu{display:block}summary{display:list-item}canvas{display:inline-block}template{display:none}[hidden]{display:none}
 
 .clearfix:after {visibility: hidden; display: block; font-size: 0; content: ''; clear: both; height: 0; }
@@ -25,16 +24,11 @@ body{
     margin: 0;
     padding: 0;
     font-size: 62.5%;
-    /* background: rgb(206, 190, 211); */
-    /* font-family: Arial, Helvetica, sans-serif; */
-    /* background: var(--violet); */
-    /* font-family: 'Poiret One', cursive; */
 }
 
+/* Add default font family to all elements within html body */
 body *{
-    font-family: 'Poiret One', arial;
-    /* border: 1px solid red; */
-    
+    font-family: 'Poiret One', arial;   
 }
 
 /* Wrapper Properties */
@@ -46,22 +40,12 @@ body *{
 
 /* Properties for main window */
 .mainWindow{
-    /* border: 20px solid var(--brown); */
-    /* background: var(--green); */
     border-radius: 15px;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: row;
-    /* padding-top: 20px; */
-    /* height: 700px; */
+    flex-direction: column;
     height: 100vh;
-}
-
-.mainWindow>*{
-    
-    border-radius: 15px;
-    
 }
 
 .windowInner{
@@ -69,25 +53,15 @@ body *{
     align-items: center;
     height: 650px;
     width: 100%;
-    /* border: 3px solid green; */
-}
-
-.windowInner>*{
-    border-radius: 15px;
 }
 
 .resultsContainer, .sidePane, .featuredContent{
     height: 100%;
-   /* margin-right: 15px; */
 }
 
 .resultsContainer, .sidePane{
     background: var(--beige);
 }
-
-/* .sidePane{
-    order: -1;
-} */
 
 h1{
     margin: 0;
@@ -100,42 +74,30 @@ h1{
     background: var(--beige);
 }
 
-/* h1 span{
-    font-family: Arial, Helvetica, sans-serif;
-    color: var(--teal);
-    font-size: 1rem;
-    letter-spacing: 0.2rem;
-    background: white;
-} */
-
 h2{
     margin: 15px 0;
-    /* padding: 20px 30px; */
     color: var(--violet);
     font-size: 1.3rem;
     letter-spacing: 0.3rem;
     font-weight: 200;
-    /* font-family: sans-serif; */
-    /* width: 100%; */
 }
 
-.featuredContent *{
+.mainWindow>*,
+.windowInner>*,
+.featuredContent *{   
     border-radius: 15px;
 }
 
 /* Formatting for featureContent container (to house all output results inside) */
 .featuredContent{
-    /* margin-right: 15px; */
-    /* background: var(--beige); */
-    /* flex: 0 1 65%; */
     width: 65%;
     display: flex;
     flex-direction: column;
     margin-right: 30px;
 }
 
+/* Immediate parent container housing all bar graphs */
 .resultsContainer{
-    /* margin-top: 15px; */
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -151,17 +113,11 @@ h2{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* align-items: center; */
     width: 100%;
-    /* margin: 10px 0; */
     margin-bottom: 10px;
 }
 
-/* .eachGraphContainer *{
-    border: 1px solid red;
-} */
-
-/* Flex properties on each title and its associated bar graph */
+/* Flex properties on each graph's title and its associated bar graph outer */
 .eachGraphContainer > h2{
     flex: 0 1 25%;
 }
@@ -189,22 +145,18 @@ h2{
     background: var(--paleBlue);
 }
 
+/* Apply 0 margin to children of .graphOuter */
 .graphOuter div, h3{
-    /* display: inline-block; */
     margin: 0;
 }
 
 .graphOuter h3{
-    /* flex: 0 1 20%; */
-    /* width: 15%; */
     color: var(--violet);
     font-size: 1.3rem;
     letter-spacing: 0.25rem;
     margin: 0 10px;
     font-weight: 400;
-    /* text-transform: uppercase; */
 }
-
 
 /* Properties for the bar graph itself */
 .graph{
@@ -214,10 +166,6 @@ h2{
   border-right: 3px solid var(--teal);
   border-radius: 7px;
   transition: all 0.7s ease;
-  /* text-align: center; */
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
 }    
 
 /* Not display the element if this class is invoked*/
@@ -227,23 +175,14 @@ h2{
 
 /* Formatting for sidePane (to house all user inputs) */
 .sidePane{
-    /* margin-left: 15px; */
-    /* background: var(--beige); */
     display: flex;
     align-items: center;
-    /* flex: 1 1 35%; */
     width: 35%;
     min-width: 280px;
     padding: 15px 15px;
-    /* width: 30%; */
     height: 100%;
     justify-content: center;
-    /* width: 300px; */
 }
-
-/* .sidePane *{
-    border: 1px solid red;
-} */
 
 /* Formatting for form */
 form{
@@ -257,30 +196,33 @@ form *{
     border: none;
 }
 
+/* Direct parent container for the input date and input date labels (used for the start date, as well as for the end date fields */
 .dateSelector{
-    /* flex: 0 1 100%; */
-    /* padding: 20px 0; */
     text-align: center;
     margin-bottom: 15px;
     width: 100%;
-    /* display: flex;
-    flex-direction: column; */
-    /* border: 1px solid red; */
 }
 
-/* Start and End date label formatting */
+footer{
+    margin: 15px;
+    padding: 15px;
+    color: var(--violet);
+    background: var(--beige);
+    width: 100%;
+}
+
+/* Start and End date label and footer h3 formatting */
 label[for=start], 
 label[for=end]{
     color: var(--violet);
     font-size: 1.3rem;
     letter-spacing: 0.3rem;
-    /* text-align: left; */
-    /* width: 80%; */
+    text-align: center;
+    font-weight: 400;
 }
 
 /* Formatting for date input fields and select field*/
 input[type=date], select{
-    /* border: none;  */
     color: var(--violet);
     font-size: 1.1rem;
     outline: none;
@@ -290,67 +232,64 @@ input[type=date], select{
     text-align: center;
 }
 
-select, label,input[type=date]{
-    /* width: 250px; */
-    /* min-width: 80%; */
-    width: 100%;
-}
-
 /* Formatting for input date fields */
 input[type=date]{
     border-bottom: 1px solid var(--green);
     margin-top: 7px;
-   
-
 }
 
-
+select, label,input[type=date]{
+    width: 100%;
+}
 
 /* Formatting for submit and reset buttons */
 button{
     letter-spacing: 0.5rem;
-    /* border: none; */
     border-radius: 5px;
     color: var(--beige);
     font-size: 1.1rem;
     padding: 12px 0px;
     width: 55%;
     margin-top: 15px;
+    transition: all 0.8s ease;
 }
 
 button[type=submit]{
     background: var(--violet);
+    border: 3px solid var(--violet);
 }
 
 button[type=reset]{
     background: var(--bronze);
+    border: 3px solid var(--bronze);
 }
 
-button:focus{
+button:focus,
+button:hover{
     border: 3px solid var(--teal);
+    cursor: pointer;
 }
 
 /* Media Queries */
+/* Tested down to 320px width for mobile displays */
 
+/* Media query at 860px or lower screen widths */
 @media(max-width: 860px){
-
     .resultsContainer{
         padding: 10px 20px;
     }
-
 }
 
+/* Media query at 740px or lower screen widths */
 @media(max-width: 740px){
-    .mainWindow{
+    .mainWindow,
+    .windowInner,
+    .featuredContent{
         height: initial;
     }
     
     .windowInner{
         flex-direction: column;
-    }
-
-    .windowInner{
-        height: initial;
     }
 
     .sidePane{
@@ -363,7 +302,6 @@ button:focus{
     .featuredContent{
         margin-right: 0;
         width: 100%;
-        height: initial;
     }
 
     .resultsContainer{
@@ -385,7 +323,6 @@ button:focus{
     .eachGraphContainer{
         margin-bottom: 5px;
     }
-
 }
 
 
